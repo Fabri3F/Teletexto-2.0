@@ -1,0 +1,103 @@
+---
+inclusion: always
+---
+
+# Tecnología: Teletexto 2.0
+
+Todas las decisiones de este documento provienen de `.kiro/specs/teletexto-2-0/design.md`. **No se agregan tecnologías, bibliotecas ni servicios que no estén aquí.** Si hace falta algo nuevo, se propone un cambio al diseño y se espera la aprobación del equipo.
+
+## Stack aprobado
+
+| Área | Decisión |
+|---|---|
+| Lenguaje | TypeScript en todo el código |
+| Cliente | PWA con Preact + Vite |
+| Estilo | CSS propio y fuente monoespaciada del sistema. Sin frameworks CSS ni fuentes web |
+| Contenido | Archivos JSON estáticos generados en build (`/p/NNN.json`, `/manifest.json`) y servidos por CDN |
+| Hosting y CDN | Cloudflare Pages (HTTPS automático, `_headers`, ETag y 304) |
+| Ingesta | CLI de Node (`tools/ingest`) que ejecuta Parser, Resumidor y Verificador y escribe en `dist/` |
+| Validación de esquema | Ajv con JSON Schema |
+| IA | LLM por API (por ejemplo Claude Haiku o Gemini Flash), invocado solo desde el CLI de ingesta |
+| Verificador | Determinista (expresiones regulares y léxicos), sin LLM |
+| Modo sin conexión | Service worker escrito a mano con Cache Storage. Metadatos de sincronización en IndexedDB. Sin Workbox |
+| Escritura de contenido | Un único Worker de Cloudflare `/admin/reload`, con token JWT firmado |
+| Rate limit | Cloudflare WAF Rate Limiting: 60 solicitudes por 60 s por IP, respuesta 429 con `Retry-After` |
+| CI | GitHub Actions (ingesta, pruebas, verificación de tamaños, gitleaks) |
+| Pruebas | Vitest + fast-check (propiedades), Playwright + axe-core (extremo a extremo y accesibilidad), Lighthouse CI (rendimiento y PWA), k6 (carga) |
+
+## Arquitectura
+
+- Los datos viajan en una sola dirección: `data/*.json` → Parser (Ajv) → conectores → orquestador de resúmenes → Pretty_Printer → `dist/p/NNN.json` y `manifest.json` → CDN → service worker → Cliente_Web.
+- El Servicio_Contenido **no tiene servidor propio**. Toda respuesta es un archivo estático, sin estado y sin cómputo por solicitud.
+- El Cliente_Web solo consume `/p/NNN.json` y `/manifest.json` del mismo origen. **No llama nunca al Resumidor_IA ni a ninguna API de IA.**
+- Los resúmenes se generan una vez, al publicar o actualizar un aviso, nunca en la consulta del usuario.
+- Los componentes (Cliente_Web, Servicio_Contenido, Resumidor_IA) se comunican solo por interfaces definidas, para poder reemplazarlos por separado.
+- El Worker `/admin/reload` es el único punto de escritura. Solo dispara el workflow de ingesta en CI.
+
+## Reglas de ingesta y de datos
+
+1. **Un archivo por página** (`p/NNN.json`), con sus metadatos dentro. Así el almacenamiento de página y metadatos es atómico y permite ETag y 304 con cuerpo vacío.
+2. **Reemplazo atómico**: se escribe en `dist.tmp/` y se renombra a `dist/` solo si todo tuvo éxito. Si falla, `dist/` anterior queda intacto.
+3. **Carga de todo o nada**: un archivo vacío, de más de 1 MB, que no sea JSON o que incumpla el esquema se rechaza completo, con archivo, campo y regla, y el contenido anterior no cambia.
+4. **Fechas**: UTC ISO 8601 en datos y servidor. La conversión a hora de Lima (UTC-5, formato `DD/MM/AAAA HH:mm`) ocurre solo en el cliente.
+5. **Dinero**: los precios se guardan como **céntimos enteros** (`precioCentimos`, `null` = "Sin dato") y se formatean como `S/ 2.50`. Nunca se usa coma flotante para dinero.
+6. **Páginas**: número entero de 100 a 999, sin duplicados. Agregar una página se hace con datos y configuración, sin tocar el código de navegación.
+7. **`esDatoDePrueba`** es un booleano obligatorio en la página y en cada registro. Ausente o inválido se trata como `true`.
+8. **Conectores**: cada fuente se lee detrás de la interfaz `ConectorFuente` (tiempo límite de 10 s). El MVP usa `ConectorPrueba` con `data/prueba/*.json`. Sustituirlo por un conector real no debe cambiar el Cliente_Web. Si un conector falla, se registra la fuente y se conserva el último contenido válido.
+9. **Hash del aviso**: `hashFuente` es SHA-256 del texto original normalizado. Si el hash no cambió, no se vuelve a invocar a la IA.
+10. **Registro de verificación**: `logs/verificacion.jsonl` guarda `{avisoId, estado, motivo?, verificadoEn}`. Los estados `rechazado` y `no_verificado` no se publican en el JSON público.
+11. **Presupuesto de tamaño**: carga inicial de 150 KB o menos (comprimida), cada `p/NNN.json` de 20 KB o menos, imágenes de 10 KB o menos (solo iconos SVG en línea).
+
+## Reglas de IA y verificación (obligatorias)
+
+- Un resumen se publica solo si tiene de 1 a 60 palabras **y** el Verificador devolvió `aprobado`.
+- Los Datos_Críticos del resumen (cifras, fechas, horas, lugares, niveles de alerta) deben ser un subconjunto exacto de los del aviso. Cada recomendación del aviso (`recomendaciones[].clave` con sus `frases`) debe aparecer en el resumen.
+- Ante la duda, el Verificador rechaza. El respaldo siempre es el texto original.
+- Política del orquestador: un intento inicial más 2 reintentos, con límite de 30 s por intento para la IA y 5 s para el Verificador. Si ningún intento es válido, se publica el aviso sin resumen y se registra el fallo.
+- Si el texto del aviso cambió y no hay resumen nuevo válido, no se conserva el resumen anterior. Un resumen solo reemplaza al anterior cuando está generado y aprobado.
+- Los avisos de prueba se redactan con 1 a 3 recomendaciones para que quepan en 60 palabras.
+- Las etiquetas de interfaz son "Resumen generado con IA" y "Se muestra el aviso original".
+
+## Reglas del cliente y del service worker
+
+- Búsqueda de página: tres dígitos, búfer de 3 como máximo, cancelación o 5 s sin dígito vacía el búfer. Una página inexistente muestra "Página no encontrada" y conserva la página anterior.
+- Reintentos de red: esperas de 1, 2 y 4 s (máximo 4 intentos). Luego se usa la versión de la Caché_Local con aviso de posible desactualización, o un error con reintento manual.
+- Service worker: precaché de la app base. Sincroniza 100, 101, 200 y 300 con límite de 10 s, hasta 3 reintentos con 30 s o más entre ellos. En fallo **no toca** la versión anterior ni `syncedAt`. Estrategia cache-first con actualización en segundo plano que **no cambia lo que se está mostrando**.
+- El reloj y la red se inyectan como dependencias para poder probar con tiempo simulado.
+- Funciones puras (búfer de dígitos, router, historial, formato, orden, filtros, paginación) separadas de los componentes Preact, para probarlas con propiedades.
+
+## Seguridad
+
+- Todo el tráfico por HTTPS. HTTP se redirige o se rechaza. HSTS activo.
+- Cabeceras en `public/_headers`: CSP restrictiva (`default-src 'self'`, sin scripts en línea, `frame-ancestors 'none'`, `base-uri 'none'`), `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY` y `Strict-Transport-Security`.
+- Todo texto externo se escapa con `escapeText` antes de mostrarse. Nunca se inserta HTML de las fuentes en el DOM.
+- Secretos (clave del LLM, clave de verificación del JWT) solo en variables de entorno del CI y del Worker. Nunca en el código, el bundle, el cliente ni los logs. gitleaks corre en CI.
+- Escritura de contenido solo con `Authorization: Bearer <JWT>` con `rol=admin` y `exp` vigente: 401 si falta o es inválida, 403 si el rol no es admin. En ambos casos no cambia nada y se registra fecha y hora, IP y recurso.
+- Sin datos personales, sin cuentas y sin rastreadores de terceros.
+
+## Convenciones de código
+
+- TypeScript estricto. Tipos del modelo (`Page`, `Alerta`, `Precio`, `Campana`, `AvisoOficial`, `Metadatos`) según el diseño. Los errores esperados se devuelven como `Result` tipado, no con excepciones sueltas.
+- Identificadores del dominio en español, como en el diseño (`esDatoDePrueba`, `precioCentimos`, `textoOriginal`, `recomendaciones`). Textos de interfaz en español sencillo, oraciones de 25 palabras o menos.
+- Funciones puras siempre que sea posible. Efectos (red, caché, reloj, IA) detrás de interfaces inyectables.
+- Accesibilidad: contraste de 4.5:1 como mínimo (7:1 para el estilo teletexto), foco visible de 2 px y 3:1, todo operable por teclado, ARIA en el orden número de página, título y metadatos, niveles de alerta con texto e icono además del color, texto ampliable a 200 %.
+- Responsivo de 320 a 3840 px. Texto base de 24 px o más desde 1280 px. Controles táctiles de 44x44 px o más bajo 600 px. Navegación completa con direccionales, números y confirmación.
+
+## Pruebas
+
+- Vitest + fast-check, mínimo **100 iteraciones** (`numRuns: 100`) por propiedad, **una prueba por propiedad**, con el comentario `Feature: teletexto-2-0, Property N: <texto>` y la anotación `Validates: Requirements ...`.
+- Las 26 propiedades del diseño son la referencia. Las propiedades 1, 2, 21 y 22 deben estar listas antes del día 8.
+- Generadores previstos: `arbPage`, `arbAviso`, `arbMutacion`, `arbEventosDigitos`, `arbResultadosSync`, `arbToken`, `arbHtmlHostil`.
+- Lo que no admite propiedades (CDN, cabeceras, rate limit, 304, rendimiento, PWA, accesibilidad, 1000 usuarios concurrentes) va a pruebas de integración o de humo con las herramientas indicadas arriba.
+- No se da una tarea por terminada si fallan las pruebas existentes.
+
+## Costo
+
+Meta: USD 20 al mes o menos. El diseño estima menos de USD 7 al mes (Cloudflare Pages, WAF básico, Worker y GitHub Actions en plan gratuito; API de IA menos de USD 1; dominio opcional; reserva). Toda decisión nueva debe mantenerse en niveles gratuitos o de costo bajo. El valor de la API de IA debe confirmarse con la tarifa vigente del proveedor.
+
+## Limitaciones conocidas que los agentes no deben "arreglar" por su cuenta
+
+- El Verificador solo detecta los tipos de datos que su extractor conoce. Puede rechazar resúmenes correctos, y eso es aceptable porque el respaldo es el texto original.
+- El requisito de incluir el 100 % de las recomendaciones en 60 palabras puede forzar a mostrar el aviso original.
+- Los cambios de contenido se publican por build, no al instante.
+- El campo `recomendaciones[].clave` es una convención de datos del diseño que el equipo debe confirmar.

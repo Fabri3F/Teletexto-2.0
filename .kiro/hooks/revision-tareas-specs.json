@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Revisión de tareas de Specs",
+      "trigger": "PostTaskExec",
+      "description": "Al terminar una tarea de una Spec, revisa el trabajo realizado frente a requirements.md, design.md, steering y criterios de aceptación.",
+      "action": {
+        "type": "agent",
+        "prompt": "Acabas de terminar de ejecutar una tarea de una Spec. Antes de darla por completada, revisa el trabajo realizado:\n\n1. Revisa los archivos modificados durante la tarea.\n2. Comprueba que los cambios respeten requirements.md, design.md y los documentos de .kiro/steering/.\n3. Comprueba si la tarea cumple sus criterios de aceptación.\n4. Si existen pruebas para esa funcionalidad, ejecútalas o verifica sus resultados.\n5. Si detectas problemas, informa cuáles son y qué debería corregirse.\n6. No marques una tarea como completada si sus criterios no se cumplen.\n7. No inventes requisitos ni modifiques el alcance del proyecto."
+      }
+    }
+  ]
+}
