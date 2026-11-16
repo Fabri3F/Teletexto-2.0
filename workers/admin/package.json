@@ -1,0 +1,11 @@
+{
+  "name": "@teletexto/admin",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Worker de Cloudflare /admin/reload: único punto de escritura. Se implementa en la tarea 14.2.",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

@@ -13,7 +13,10 @@ Todas las decisiones de este documento provienen de `.kiro/specs/teletexto-2-0/d
 | Lenguaje | TypeScript en todo el código |
 | Cliente | PWA con Preact + Vite |
 | Estilo | CSS propio y fuente monoespaciada del sistema. Sin frameworks CSS ni fuentes web |
-| Contenido | Archivos JSON estáticos generados en build (`/p/NNN.json`, `/manifest.json`) y servidos por CDN |
+| Contenido | Archivos JSON estáticos generados en build (`/p/NNN.json`, `/d/alertas.json`, `/manifest.json`) y servidos por CDN |
+| Mapa (Página 400) | SVG en línea renderizado por Preact a partir de `/geo/departamentos.json` (rutas SVG pre-simplificadas, 80 KB comprimidos o menos). Sin Leaflet, MapLibre ni teselas de red |
+| Preparación de la geometría | Herramienta de build de una sola vez, `tools/geo`, con mapshaper (CLI, licencia MIT) y un script propio. El resultado se versiona en el repositorio |
+| Indicador de datos | Módulo propio de menos de 2 KB que usa Resource Timing en la página y mensajes (`postMessage`) del service worker. Sin bibliotecas |
 | Hosting y CDN | Cloudflare Pages (HTTPS automático, `_headers`, ETag y 304) |
 | Ingesta | CLI de Node (`tools/ingest`) que ejecuta Parser, Resumidor y Verificador y escribe en `dist/` |
 | Validación de esquema | Ajv con JSON Schema |
@@ -27,9 +30,11 @@ Todas las decisiones de este documento provienen de `.kiro/specs/teletexto-2-0/d
 
 ## Arquitectura
 
-- Los datos viajan en una sola dirección: `data/*.json` → Parser (Ajv) → conectores → orquestador de resúmenes → Pretty_Printer → `dist/p/NNN.json` y `manifest.json` → CDN → service worker → Cliente_Web.
+- Los datos viajan en una sola dirección: `data/*.json` → Parser (Ajv) → conectores (con mapeo de niveles) → orquestador de resúmenes → Pretty_Printer → `dist/p/NNN.json`, `dist/d/alertas.json` y `manifest.json` → CDN → service worker → Cliente_Web.
+- **Fuente única de alertas:** las Páginas 101 y 400 leen el mismo `/d/alertas.json` y calculan sus vistas con la misma función `alertasVigentes(dataset, ahora)`. No se duplican alertas dentro de los archivos de página.
+- La geometría del mapa (`/geo/departamentos.json`) es un archivo estático aparte, fuera de la carga inicial, que se descarga al abrir la Página 400 o al sincronizar.
 - El Servicio_Contenido **no tiene servidor propio**. Toda respuesta es un archivo estático, sin estado y sin cómputo por solicitud.
-- El Cliente_Web solo consume `/p/NNN.json` y `/manifest.json` del mismo origen. **No llama nunca al Resumidor_IA ni a ninguna API de IA.**
+- El Cliente_Web solo consume `/p/NNN.json`, `/d/alertas.json`, `/geo/departamentos.json` y `/manifest.json` del mismo origen. **No llama nunca al Resumidor_IA ni a ninguna API de IA.**
 - Los resúmenes se generan una vez, al publicar o actualizar un aviso, nunca en la consulta del usuario.
 - Los componentes (Cliente_Web, Servicio_Contenido, Resumidor_IA) se comunican solo por interfaces definidas, para poder reemplazarlos por separado.
 - El Worker `/admin/reload` es el único punto de escritura. Solo dispara el workflow de ingesta en CI.
@@ -46,7 +51,9 @@ Todas las decisiones de este documento provienen de `.kiro/specs/teletexto-2-0/d
 8. **Conectores**: cada fuente se lee detrás de la interfaz `ConectorFuente` (tiempo límite de 10 s). El MVP usa `ConectorPrueba` con `data/prueba/*.json`. Sustituirlo por un conector real no debe cambiar el Cliente_Web. Si un conector falla, se registra la fuente y se conserva el último contenido válido.
 9. **Hash del aviso**: `hashFuente` es SHA-256 del texto original normalizado. Si el hash no cambió, no se vuelve a invocar a la IA.
 10. **Registro de verificación**: `logs/verificacion.jsonl` guarda `{avisoId, estado, motivo?, verificadoEn}`. Los estados `rechazado` y `no_verificado` no se publican en el JSON público.
-11. **Presupuesto de tamaño**: carga inicial de 150 KB o menos (comprimida), cada `p/NNN.json` de 20 KB o menos, imágenes de 10 KB o menos (solo iconos SVG en línea).
+11. **Presupuesto de tamaño**: carga inicial de 150 KB o menos (comprimida, incluye la pantalla de carga y el indicador de datos), cada `p/NNN.json` y `/d/alertas.json` de 20 KB o menos, geometría del mapa de 80 KB o menos (presupuesto aparte), imágenes de 10 KB o menos (solo iconos SVG en línea). La pantalla de carga pesa 5 KB o menos y el indicador de datos 2 KB o menos.
+12. **Alertas de riesgo**: cada alerta lleva departamentos (los 25 códigos válidos), nivel normalizado (Bajo, Moderado, Alto, Muy alto), tipo de riesgo, vigencia (inicio y fin), fecha de actualización, fuente (SENAMHI o INDECI) y referencia verificable. La conversión de las escalas oficiales a los 4 niveles se hace solo en los conectores. **No existe ningún nivel por defecto**: una alerta sin departamento, nivel o fechas válidos hace que se rechace el archivo.
+13. **Riesgo por departamento**: función pura `riesgoPorDepartamento(alertas, ahora)` con reloj inyectado. El nivel es el más alto entre las alertas vigentes. Las alertas vencidas se excluyen, también desde la caché. Sin alertas vigentes, el resultado es "sin información" (estilo neutro y texto exacto "Sin información disponible").
 
 ## Reglas de IA y verificación (obligatorias)
 
@@ -62,9 +69,14 @@ Todas las decisiones de este documento provienen de `.kiro/specs/teletexto-2-0/d
 
 - Búsqueda de página: tres dígitos, búfer de 3 como máximo, cancelación o 5 s sin dígito vacía el búfer. Una página inexistente muestra "Página no encontrada" y conserva la página anterior.
 - Reintentos de red: esperas de 1, 2 y 4 s (máximo 4 intentos). Luego se usa la versión de la Caché_Local con aviso de posible desactualización, o un error con reintento manual.
-- Service worker: precaché de la app base. Sincroniza 100, 101, 200 y 300 con límite de 10 s, hasta 3 reintentos con 30 s o más entre ellos. En fallo **no toca** la versión anterior ni `syncedAt`. Estrategia cache-first con actualización en segundo plano que **no cambia lo que se está mostrando**.
+- Service worker: precaché de la app base. Sincroniza 100, 101, 200 y 400 más `/d/alertas.json` y la geometría del mapa, con límite de 10 s, hasta 3 reintentos con 30 s o más entre ellos. En fallo **no toca** la versión anterior ni `syncedAt`. Estrategia cache-first con actualización en segundo plano que **no cambia lo que se está mostrando**.
+- Las Páginas 101 y 400 se sincronizan como una unidad con `/d/alertas.json`. Una sincronización de 101 o 400 solo cuenta como exitosa si el dataset también se obtuvo, y ambas comparten `syncedAt`.
+- Desactualización: función pura `estadoFrescura(syncedAt, ahora, umbral)` con umbrales de 6 h (101 y 400) y 24 h (100 y 200). Resultados: "nunca", "vigente" o "desactualizada". El aviso "Información desactualizada" se muestra con texto e icono, con o sin conexión, y no se retira mientras el usuario lee.
+- Estado de sincronización de la Portada (Cargando, Sincronizando, Sincronizado, Error, Sin conexión) como reducer puro. El estado de conexión ("En línea" o "Sin conexión") y la última sincronización aparecen en todas las páginas.
+- Portada: reloj en hora de Perú con segundos, calculado desde el reloj inyectado (sin depender de `Intl`), con tick de 1 s alineado. Pantalla de carga en `index.html` y CSS externo (sin scripts ni estilos en línea por la CSP), oculta como máximo a los 1.5 s y sin animación con `prefers-reduced-motion`.
+- Mapa: un `<g>` por departamento con foco itinerante, `aria-label` con nombre y nivel, colores más patrones SVG más iconos, recorrido por teclado y control remoto que alcanza los 25 departamentos, y tabla alternativa que también se usa si la geometría no carga.
 - El reloj y la red se inyectan como dependencias para poder probar con tiempo simulado.
-- Funciones puras (búfer de dígitos, router, historial, formato, orden, filtros, paginación) separadas de los componentes Preact, para probarlas con propiedades.
+- Funciones puras (búfer de dígitos, router, historial, formato, reloj, estado de sincronización, desactualización, riesgo por departamento, navegación del mapa, acumulador del indicador de datos, orden, filtros, paginación) separadas de los componentes Preact, para probarlas con propiedades.
 
 ## Seguridad
 
@@ -86,9 +98,9 @@ Todas las decisiones de este documento provienen de `.kiro/specs/teletexto-2-0/d
 ## Pruebas
 
 - Vitest + fast-check, mínimo **100 iteraciones** (`numRuns: 100`) por propiedad, **una prueba por propiedad**, con el comentario `Feature: teletexto-2-0, Property N: <texto>` y la anotación `Validates: Requirements ...`.
-- Las 26 propiedades del diseño son la referencia. Las propiedades 1, 2, 21 y 22 deben estar listas antes del día 8.
-- Generadores previstos: `arbPage`, `arbAviso`, `arbMutacion`, `arbEventosDigitos`, `arbResultadosSync`, `arbToken`, `arbHtmlHostil`.
-- Lo que no admite propiedades (CDN, cabeceras, rate limit, 304, rendimiento, PWA, accesibilidad, 1000 usuarios concurrentes) va a pruebas de integración o de humo con las herramientas indicadas arriba.
+- Las 38 propiedades del diseño son la referencia. Las propiedades 1, 2, 21, 22, 27 y 28 deben estar listas antes del día 9.
+- Generadores previstos: `arbPage`, `arbAviso`, `arbMutacion`, `arbEventosDigitos`, `arbResultadosSync`, `arbToken`, `arbHtmlHostil`, `arbAlertaRiesgo`, `arbDataset`, `arbEventosSync`, `arbMuestrasBytes`, `arbGeometria`.
+- Lo que no admite propiedades (CDN, cabeceras, rate limit, 304, rendimiento, PWA, accesibilidad incluido el mapa con teclado y a 320 px, tamaños de carga inicial y de geometría, 1000 usuarios concurrentes) va a pruebas de integración o de humo con las herramientas indicadas arriba.
 - No se da una tarea por terminada si fallan las pruebas existentes.
 
 ## Costo
@@ -101,3 +113,6 @@ Meta: USD 20 al mes o menos. El diseño estima menos de USD 7 al mes (Cloudflare
 - El requisito de incluir el 100 % de las recomendaciones en 60 palabras puede forzar a mostrar el aviso original.
 - Los cambios de contenido se publican por build, no al instante.
 - El campo `recomendaciones[].clave` es una convención de datos del diseño que el equipo debe confirmar.
+- **Geometría del mapa:** la fuente (INEI/IGN como candidata), su licencia y la codificación de los 25 departamentos son supuestos que el equipo debe confirmar antes de usar los datos (tarea 3.1 de `tasks.md`). No se afirma que la geometría sea oficial hasta confirmarlo. `tools/geo` no corre mientras `confirmadoPorEquipo` sea `false`.
+- **Escala de niveles:** la conversión de las escalas oficiales de SENAMHI e INDECI a los 4 niveles (verde = Bajo, amarillo = Moderado, naranja = Alto, rojo = Muy alto) es un supuesto por confirmar.
+- **Indicador de datos:** solo mide lo que el navegador expone. Los bytes enviados se muestran como "No disponible" (no se estiman). Las respuestas servidas desde caché no cuentan como descargadas. Tiene un margen de error documentado en el diseño. Nunca se usan valores simulados.

@@ -1,0 +1,58 @@
+/* Paleta clásica del teletexto: 8 colores sobre fondo negro. */
+:root {
+  --negro: #000000;
+  --rojo: #ff0000;
+  --verde: #00ff00;
+  --amarillo: #ffff00;
+  --azul: #0000ff;
+  --magenta: #ff00ff;
+  --cian: #00ffff;
+  --blanco: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--negro);
+  color: var(--blanco);
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, 'Courier New', monospace;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Cuadrícula de unas 40 columnas, como el teletexto original. */
+.pantalla {
+  max-width: 40ch;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0 0.5rem 1rem;
+}
+
+.cabecera {
+  margin: 0 -0.5rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--azul);
+  color: var(--blanco);
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
+.titulo {
+  margin: 1rem 0 0.5rem;
+  color: var(--amarillo);
+  font-size: 1.25rem;
+}
+
+p {
+  margin: 0 0 0.5rem;
+}
+
+/* Lectura a distancia en televisores y pantallas grandes (Requisito 6.3). */
+@media (min-width: 1280px) {
+  html {
+    font-size: 24px;
+  }
+}

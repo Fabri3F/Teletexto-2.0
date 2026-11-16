@@ -1,0 +1,11 @@
+{
+  "name": "@teletexto/verifier",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Verificador determinista de resúmenes (sin LLM ni red). Se implementa en la tarea 10.1.",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  }
+}

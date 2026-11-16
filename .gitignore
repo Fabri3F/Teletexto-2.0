@@ -6,3 +6,9 @@ build/
 !.env.example
 .DS_Store
 Thumbs.db
+dist.tmp/
+logs/
+coverage/
+test-results/
+playwright-report/
+*.tsbuildinfo

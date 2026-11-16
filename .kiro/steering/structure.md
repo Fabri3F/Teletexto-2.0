@@ -16,22 +16,28 @@ Teletexto-2.0/
 ├── apps/
 │   └── web/                        # Cliente_Web (Preact + Vite + TypeScript)
 │       ├── sw.ts                   # Service worker escrito a mano
+│       ├── shell/                  # splash (pantalla de carga) y reloj de la Portada
+│       ├── sync/                   # estadoSync, frescura, conexion
 │       ├── nav/                    # entryBuffer, router, history
 │       ├── data/                   # pageLoader, retry
 │       ├── format/                 # dates, money, sanitize
-│       ├── pages/                  # Portada, Alertas, Precios, Salud + alertSort, pricesView, healthView
+│       ├── pages/                  # Portada, Alertas, Precios, Mapa (MapaRiesgos)
+│       ├── risk/                   # alertas, departamentos, mapNav (lógica pura del riesgo y del mapa)
+│       ├── meter/                  # datos (Indicador_de_Datos)
 │       └── a11y/                   # contrast
 ├── packages/
 │   └── verifier/                   # Verificador determinista (extraerCriticos, verificar)
 ├── tools/
-│   └── ingest/                     # CLI de ingesta: Parser, Pretty_Printer, conectores, orquestador
+│   ├── ingest/                     # CLI de ingesta: Parser, Pretty_Printer, conectores, mapeo de niveles, orquestador
+│   └── geo/                        # Preparación única de la geometría del mapa (mapshaper + script propio)
 ├── workers/
 │   └── admin/                      # Worker de Cloudflare /admin/reload
 ├── data/
-│   └── prueba/                     # Datos de prueba (*.json) de las páginas 100, 101, 200 y 300
+│   └── prueba/                     # Datos de prueba (*.json) de las páginas 100, 101, 200 y 400 (incluye alertas de riesgo)
 ├── public/
-│   └── _headers                    # CSP, HSTS y demás cabeceras de seguridad
-├── dist/                           # Salida generada (p/NNN.json, manifest.json). No se edita a mano
+│   ├── _headers                    # CSP, HSTS y demás cabeceras de seguridad
+│   └── geo/departamentos.json      # Geometría del mapa (generada por tools/geo, 80 KB comprimidos o menos)
+├── dist/                           # Salida generada (p/NNN.json, d/alertas.json, manifest.json). No se edita a mano
 └── logs/
     └── verificacion.jsonl          # Registro de verificación (auditoría, no se publica)
 ```
@@ -51,23 +57,32 @@ Elementos de soporte previstos por el diseño y las tareas: `page.schema.json` (
 | `nav/history` | Historial de sesión: `visit`, `back` |
 | `data/pageLoader` | `loadPage` con reintentos y respaldo a la Caché_Local |
 | `data/retry` | `backoffSchedule` (1, 2 y 4 s), pura |
-| `format/dates` | `formatLima` (`DD/MM/AAAA HH:mm` o "No disponible") |
+| `format/dates` | `formatLima` (`DD/MM/AAAA HH:mm` o "No disponible") y `formatLimaConSegundos` para el reloj |
+| `shell/splash`, `shell/reloj` | Pantalla de carga (marcado en `index.html` y `splash.css`) y reloj de la Portada con reloj inyectado |
+| `sync/estadoSync`, `sync/frescura`, `sync/conexion` | Reducer del estado de sincronización, `estadoFrescura` (umbrales 6 h y 24 h, "Nunca sincronizada") y estado "En línea" o "Sin conexión" |
 | `format/money` | `formatSoles` sobre céntimos enteros |
 | `format/sanitize` | `escapeText` para todo texto externo |
-| `pages/Portada`, `Alertas`, `Precios`, `Salud` | Vistas. Reciben un `Page` ya validado |
-| `pages/alertSort` | `sortAlerts`, `mergeSources` |
+| `pages/Portada`, `Alertas`, `Precios`, `Mapa` | Vistas. Reciben datos ya validados. `Mapa` contiene `MapaRiesgos` (SVG, leyenda, panel de detalle, tabla alternativa) |
+| `risk/alertas` | `esVigente`, `alertasVigentes`, `riesgoPorDepartamento`, `detalleDepartamento`, `sortAlerts`, `mergeSources` (puras, con reloj inyectado) |
+| `risk/departamentos` | Tabla de datos de los 25 departamentos (código y nombre). Datos, no lógica |
+| `risk/mapNav` | `ordenRecorrido` y `mover` para el recorrido por teclado y control remoto (puras) |
+| `meter/datos` | Acumulador, `formatMB` y `textoIndicador` (puros) más un adaptador pequeño con Resource Timing y mensajes del service worker |
 | `pages/pricesView` | `filterByProduct`, `paginate` (20) |
-| `pages/healthView` | `sortByStart`, `activeCampaigns`, `paginate` (20) |
 | `a11y/contrast` | `contrastRatio`, usado en pruebas de la paleta |
-| `sw.ts` | Precaché, `sync` de páginas, estrategia de caché, `getCacheStatus`, `listCachedPages` |
+| `sw.ts` | Precaché, `sync` de las Páginas 100, 101, 200 y 400 más `/d/alertas.json` y la geometría, estrategia de caché, `getCacheStatus`, `listCachedPages` y mensajes de bytes medidos hacia la página |
 
 ### `tools/ingest` (Servicio_Contenido en build)
 
 - Parser_de_Contenido: `parsePage`, `loadAll`, `validatePageConfig` (con Ajv).
 - Pretty_Printer: `printPage` (JSON UTF-8, claves en orden fijo, sangría de 2 espacios, `\n` final).
-- Conectores: interfaz `ConectorFuente` y `ConectorPrueba` (lee `data/prueba/*.json`).
+- Conectores: interfaz `ConectorFuente` y `ConectorPrueba` (lee `data/prueba/*.json`). El mapeo de las escalas oficiales a los 4 niveles vive en los conectores.
+- Escribe `dist/d/alertas.json`, el único archivo de alertas de las Páginas 101 y 400.
 - Orquestador de resúmenes: `publicarResumen`, `hashTexto`, cliente del Resumidor_IA con límite de 30 s.
 - Escritor atómico: `dist.tmp/` renombrado a `dist/`; genera `manifest.json`.
+
+### `tools/geo`
+
+Herramienta de una sola vez. Lee la fuente de geometría confirmada por el equipo, deja exactamente 25 unidades, simplifica con mapshaper hasta menos de 80 KB comprimidos y emite `public/geo/departamentos.json`. No corre mientras `confirmadoPorEquipo` sea `false`. No es parte del build normal.
 
 ### `packages/verifier`
 
@@ -79,7 +94,7 @@ Elementos de soporte previstos por el diseño y las tareas: `page.schema.json` (
 
 ## Reglas de dependencia (obligatorias)
 
-1. **El Cliente_Web no importa código de `tools/ingest` ni de `workers/admin`.** Solo lee `/p/NNN.json` y `/manifest.json` del mismo origen.
+1. **El Cliente_Web no importa código de `tools/ingest`, `tools/geo` ni `workers/admin`.** Solo lee `/p/NNN.json`, `/d/alertas.json`, `/geo/departamentos.json` y `/manifest.json` del mismo origen.
 2. **Ningún código del cliente accede a la API de IA** ni contiene claves. El Resumidor_IA solo se invoca desde `tools/ingest`.
 3. **`packages/verifier` es independiente**: no importa de `apps/web`, `tools/ingest` ni `workers/admin`. `tools/ingest` lo consume.
 4. **Las vistas de `pages/` no contienen lógica reutilizable**: orden, filtros, paginación, formato y navegación viven en funciones puras de sus módulos y se prueban con propiedades.
@@ -87,11 +102,14 @@ Elementos de soporte previstos por el diseño y las tareas: `page.schema.json` (
 6. **El modelo de datos es único.** Los tipos (`Page`, `Alerta`, `Precio`, `Campana`, `AvisoOficial`, `Metadatos`) y `page.schema.json` se definen una vez y se reutilizan. No se duplican definiciones entre cliente e ingesta.
 7. **Agregar una página nueva es cambio de datos y configuración**, no de código de navegación. El manifiesto es la fuente para saber qué páginas existen.
 8. **Los datos de prueba solo viven en `data/prueba/`** y todo registro lleva `esDatoDePrueba`. Nunca se mezclan con datos reales.
+9. **Una sola fuente de alertas.** Las Páginas 101 y 400 no guardan copias de las alertas. Ambas usan `alertasVigentes` sobre `d/alertas.json`.
+10. **La lógica de riesgo no vive en el componente del mapa.** `riesgoPorDepartamento`, `mapNav` y el acumulador del indicador de datos son funciones puras en `risk/` y `meter/`. Ningún módulo asigna un nivel de riesgo por defecto.
+11. **El indicador de datos no hace solicitudes de red ni guarda nada**: su estado vive solo en la memoria de la sesión.
 
 ## Convenciones de nombres y archivos
 
-- Carpetas y archivos de módulos como en las tablas anteriores (por ejemplo `entryBuffer`, `pageLoader`, `alertSort`).
-- Páginas de contenido numeradas con tres dígitos: `p/100.json`, `p/101.json`, `p/200.json`, `p/300.json`.
+- Carpetas y archivos de módulos como en las tablas anteriores (por ejemplo `entryBuffer`, `pageLoader`, `riesgoPorDepartamento`).
+- Páginas de contenido numeradas con tres dígitos: `p/100.json`, `p/101.json`, `p/200.json`, `p/400.json`. Las alertas viven en `d/alertas.json` y la geometría en `geo/departamentos.json`.
 - Identificadores del dominio en español, igual que el diseño.
 - Pruebas junto al módulo que prueban, con nombre que indique la propiedad o el comportamiento. Cada prueba de propiedad lleva `Feature: teletexto-2-0, Property N` y `Validates: Requirements ...`.
 - Cada tarea de `tasks.md` referencia requisitos. Los cambios de código deben poder trazarse a una tarea y a un requisito.

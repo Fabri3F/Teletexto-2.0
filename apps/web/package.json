@@ -1,0 +1,20 @@
+{
+  "name": "@teletexto/web",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Cliente_Web de Teletexto 2.0 (PWA con Preact + Vite).",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "preact": "^11.2.0"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "vite": "^8.3.8"
+  }
+}
