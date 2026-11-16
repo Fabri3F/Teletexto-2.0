@@ -35,7 +35,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - _Requirements: 4.1, 4.5_
 
 - [ ] 2. Ingesta: Parser, Pretty_Printer, conectores y generación estática (días 2 a 3)
-  - [ ] 2.1 Implementar Parser_de_Contenido y Pretty_Printer
+  - [x] 2.1 Implementar Parser_de_Contenido y Pretty_Printer
     - Implementar `parsePage`, `parseAlertas`, `printPage`, `printAlertas`, `loadAll` y `validatePageConfig` con Ajv
     - Rechazar archivos vacíos, mayores a 1 MB, no JSON o fuera del esquema, con archivo, campo y regla
     - Rechazar alertas sin Departamento válido, sin nivel válido, sin fechas o con fin anterior a inicio, sin asignar nivel por defecto
