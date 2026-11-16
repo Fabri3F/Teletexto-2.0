@@ -30,7 +30,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - Hacer que las fechas de vigencia cubran el día de la demostración
     - _Requirements: 4.14, 4.16, 10.2, 19.2, 19.3_
 
-  - [ ] 1.4 Crear la tabla de datos de los 25 Departamentos
+  - [x] 1.4 Crear la tabla de datos de los 25 Departamentos
     - Crear `risk/departamentos` con `DEPARTAMENTOS: {codigo, nombre}[]` (códigos UBIGEO 01 a 25, Callao como 07), solo datos, sin niveles
     - _Requirements: 4.1, 4.5_
 
