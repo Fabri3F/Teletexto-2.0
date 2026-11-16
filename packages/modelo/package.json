@@ -1,0 +1,17 @@
+{
+  "name": "@teletexto/modelo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Modelo de datos único de Teletexto 2.0: tipos TypeScript y esquemas JSON compartidos por el cliente, la ingesta, la geometría y el verificador.",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./esquemas": "./esquemas/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0"
+  }
+}

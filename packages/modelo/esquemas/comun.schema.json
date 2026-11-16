@@ -1,0 +1,43 @@
+{
+  "$id": "teletexto/comun.schema.json",
+  "title": "Definiciones comunes de Teletexto 2.0",
+  "description": "Definiciones compartidas por page.schema.json y alertas.schema.json. No valida ningún archivo por sí sola.",
+  "$defs": {
+    "numeroPagina": {
+      "description": "Número_de_Página: entero de tres dígitos.",
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 999
+    },
+    "id": {
+      "description": "Identificador estable de un registro.",
+      "type": "string",
+      "minLength": 1
+    },
+    "esDatoDePrueba": {
+      "description": "Verdadero si el contenido es un Dato_de_Prueba. Debe ser booleano. Al cargar, el Parser trata un valor ausente o inválido como verdadero antes de validar (Requisito 10.3).",
+      "type": "boolean"
+    },
+    "fechaHoraUtc": {
+      "description": "Instante en UTC ISO 8601 con sufijo Z, por ejemplo 2026-03-01T14:30:00Z. El patrón rechaza meses, días, horas, minutos y segundos fuera de rango, pero no puede detectar días inexistentes como el 30 de febrero ni comparar fechas entre sí: eso lo comprueba el Parser.",
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d{1,3})?Z$"
+    },
+    "fechaCalendario": {
+      "description": "Fecha de calendario AAAA-MM-DD, sin hora ni zona.",
+      "type": "string",
+      "pattern": "^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$"
+    },
+    "metadatos": {
+      "description": "Metadatos_de_Página: fuente oficial, fecha de publicación y fecha de última actualización (Requisitos 9.1 y 9.7).",
+      "type": "object",
+      "required": ["fuente", "publicadoEn", "actualizadoEn"],
+      "additionalProperties": false,
+      "properties": {
+        "fuente": { "enum": ["SENAMHI", "INDECI", "MIDAGRI", "VARIAS"] },
+        "publicadoEn": { "$ref": "#/$defs/fechaHoraUtc" },
+        "actualizadoEn": { "$ref": "#/$defs/fechaHoraUtc" }
+      }
+    }
+  }
+}

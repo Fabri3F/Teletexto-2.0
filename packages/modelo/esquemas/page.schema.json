@@ -1,0 +1,92 @@
+{
+  "$id": "teletexto/page.schema.json",
+  "title": "Página de Teletexto 2.0 (/p/NNN.json)",
+  "description": "Página 100 (portada), 200 (precios), 101 (alertas) o 400 (mapa). Las páginas 101 y 400 no llevan registros: declaran datos \"alertas\" y leen /d/alertas.json.",
+  "type": "object",
+  "required": ["numero", "titulo", "tipo", "esDatoDePrueba", "umbralHoras", "metadatos"],
+  "additionalProperties": false,
+  "properties": {
+    "numero": { "$ref": "comun.schema.json#/$defs/numeroPagina" },
+    "titulo": { "type": "string", "minLength": 1, "maxLength": 40 },
+    "tipo": { "enum": ["portada", "alertas", "precios", "mapa"] },
+    "esDatoDePrueba": { "$ref": "comun.schema.json#/$defs/esDatoDePrueba" },
+    "umbralHoras": {
+      "description": "Umbral_de_Desactualización en horas: 6 para las páginas 101 y 400, 24 para la 100 y la 200 (Requisito 7.9). El valor lo fijan los datos.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "metadatos": { "$ref": "comun.schema.json#/$defs/metadatos" },
+    "datos": { "enum": ["alertas"] },
+    "registros": { "type": "array", "minItems": 1 }
+  },
+  "allOf": [
+    {
+      "if": { "type": "object", "properties": { "tipo": { "const": "portada" } }, "required": ["tipo"] },
+      "then": {
+        "type": "object",
+        "required": ["registros"],
+        "properties": {
+          "datos": false,
+          "registros": { "type": "array", "items": { "$ref": "#/$defs/entradaMenu" } }
+        }
+      }
+    },
+    {
+      "if": { "type": "object", "properties": { "tipo": { "const": "precios" } }, "required": ["tipo"] },
+      "then": {
+        "type": "object",
+        "required": ["registros"],
+        "properties": {
+          "datos": false,
+          "registros": { "type": "array", "items": { "$ref": "#/$defs/precio" } }
+        }
+      }
+    },
+    {
+      "if": {
+        "type": "object",
+        "properties": { "tipo": { "enum": ["alertas", "mapa"] } },
+        "required": ["tipo"]
+      },
+      "then": {
+        "type": "object",
+        "required": ["datos"],
+        "properties": {
+          "datos": { "const": "alertas" },
+          "registros": false
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "entradaMenu": {
+      "description": "Entrada del menú de la Portada.",
+      "type": "object",
+      "required": ["id", "esDatoDePrueba", "numero", "nombre"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "comun.schema.json#/$defs/id" },
+        "esDatoDePrueba": { "$ref": "comun.schema.json#/$defs/esDatoDePrueba" },
+        "numero": { "$ref": "comun.schema.json#/$defs/numeroPagina" },
+        "nombre": { "type": "string", "minLength": 1, "maxLength": 40 }
+      }
+    },
+    "precio": {
+      "description": "Precio agrícola. precioCentimos es un entero en céntimos de sol, o null cuando no hay dato (nunca se estima).",
+      "type": "object",
+      "required": ["id", "esDatoDePrueba", "producto", "mercado", "unidad", "precioCentimos", "fecha"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "comun.schema.json#/$defs/id" },
+        "esDatoDePrueba": { "$ref": "comun.schema.json#/$defs/esDatoDePrueba" },
+        "producto": { "type": "string", "minLength": 1 },
+        "mercado": { "type": "string", "minLength": 1 },
+        "unidad": { "type": "string", "minLength": 1 },
+        "precioCentimos": {
+          "anyOf": [{ "type": "integer", "minimum": 0 }, { "type": "null" }]
+        },
+        "fecha": { "$ref": "comun.schema.json#/$defs/fechaCalendario" }
+      }
+    }
+  }
+}

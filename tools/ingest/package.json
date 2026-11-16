@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
+    "@teletexto/modelo": "*",
     "ajv": "^8.20.0"
   }
 }

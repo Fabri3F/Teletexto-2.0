@@ -16,13 +16,13 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - Configurar TypeScript, Vite con Preact, Vitest, fast-check (100 iteraciones por defecto), Ajv, Playwright y scripts de npm
     - _Requirements: 16.1, 17.1, 19.1_
 
-  - [ ] 1.2 Definir los esquemas JSON y los tipos
+  - [x] 1.2 Definir los esquemas JSON y los tipos
     - Escribir `page.schema.json` y `alertas.schema.json`, y los tipos `Page`, `EntradaMenu`, `Precio`, `AlertaRiesgo`, `DatasetAlertas`, `AvisoOficial`, `Metadatos`, `Geometria`, `Manifiesto` y `NivelRiesgo`
     - Exigir `esDatoDePrueba` booleano en cada registro, y `urlOriginal` o `referencia` en cada alerta
     - Declarar `datos: "alertas"` y `umbralHoras` en las páginas 101 y 400
     - _Requirements: 4.14, 9.7, 10.2, 13.1, 17.2_
 
-  - [ ] 1.3 Crear los datos de prueba y la tabla de mapeo de niveles
+  - [x] 1.3 Crear los datos de prueba y la tabla de mapeo de niveles
     - Crear archivos de datos para las Páginas 100, 101, 200 y 400 y el dataset de alertas, todos con `esDatoDePrueba: true`
     - Incluir alertas vigentes para al menos 3 Departamentos, con al menos 2 niveles distintos, y al menos 1 Departamento sin alertas vigentes
     - Incluir una alerta que cubra más de un Departamento y avisos con 1 a 3 recomendaciones

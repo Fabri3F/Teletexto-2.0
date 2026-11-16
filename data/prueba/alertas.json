@@ -1,0 +1,179 @@
+{
+  "metadatos": {
+    "fuente": "VARIAS",
+    "publicadoEn": "2026-11-15T14:00:00Z",
+    "actualizadoEn": "2026-11-16T13:00:00Z"
+  },
+  "esDatoDePrueba": true,
+  "alertas": [
+    {
+      "id": "prueba-alerta-001",
+      "esDatoDePrueba": true,
+      "titulo": "PRUEBA: helada en Puno y Cusco",
+      "tipoRiesgo": "Helada",
+      "nivel": "Alto",
+      "nivelOficial": {
+        "texto": "Naranja",
+        "esMaximo": false
+      },
+      "departamentos": [
+        "21",
+        "08"
+      ],
+      "vigencia": {
+        "inicio": "2026-11-16T05:00:00Z",
+        "fin": "2026-12-16T04:59:59Z"
+      },
+      "publicadoEn": "2026-11-15T14:00:00Z",
+      "actualizadoEn": "2026-11-16T12:00:00Z",
+      "fuente": "SENAMHI",
+      "aviso": {
+        "id": "prueba-aviso-001",
+        "textoOriginal": "AVISO DE PRUEBA, NO OFICIAL. Este texto lo escribió el equipo de Teletexto 2.0 para probar la aplicación y no proviene de SENAMHI. Simula un aviso de helada de nivel naranja en los departamentos de Puno y Cusco, vigente desde el 16/11/2026 hasta el 15/12/2026. Se recomienda abrigar a los niños y proteger los cultivos.",
+        "referencia": "Aviso de prueba PRUEBA-SENAMHI-001. Documento ficticio: no existe en SENAMHI.",
+        "recomendaciones": [
+          {
+            "clave": "abrigar-ninos",
+            "frases": [
+              "abrigar a los niños",
+              "abrigue a los niños",
+              "abriga a los niños"
+            ]
+          },
+          {
+            "clave": "proteger-cultivos",
+            "frases": [
+              "proteger los cultivos",
+              "proteja los cultivos"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "prueba-alerta-002",
+      "esDatoDePrueba": true,
+      "titulo": "PRUEBA: lluvia intensa en Loreto",
+      "tipoRiesgo": "Lluvia intensa",
+      "nivel": "Moderado",
+      "nivelOficial": {
+        "texto": "Amarillo",
+        "esMaximo": false
+      },
+      "departamentos": [
+        "16"
+      ],
+      "vigencia": {
+        "inicio": "2026-11-16T05:00:00Z",
+        "fin": "2027-01-01T04:59:59Z"
+      },
+      "publicadoEn": "2026-11-15T16:00:00Z",
+      "actualizadoEn": "2026-11-16T11:00:00Z",
+      "fuente": "INDECI",
+      "aviso": {
+        "id": "prueba-aviso-002",
+        "textoOriginal": "AVISO DE PRUEBA, NO OFICIAL. Este texto lo escribió el equipo de Teletexto 2.0 para probar la aplicación y no proviene de INDECI. Simula un aviso de lluvia intensa de nivel amarillo en el departamento de Loreto, vigente desde el 16/11/2026 hasta el 31/12/2026. Se recomienda mantenerse informado por los canales oficiales.",
+        "referencia": "Aviso de prueba PRUEBA-INDECI-002. Documento ficticio: no existe en INDECI.",
+        "recomendaciones": [
+          {
+            "clave": "mantenerse-informado",
+            "frases": [
+              "mantenerse informado",
+              "mantente informado",
+              "manténgase informado"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "prueba-alerta-003",
+      "esDatoDePrueba": true,
+      "titulo": "PRUEBA: inundación en Piura",
+      "tipoRiesgo": "Inundación",
+      "nivel": "Muy alto",
+      "nivelOficial": {
+        "texto": "Rojo",
+        "esMaximo": true
+      },
+      "departamentos": [
+        "20"
+      ],
+      "vigencia": {
+        "inicio": "2026-11-16T05:00:00Z",
+        "fin": "2026-12-21T04:59:59Z"
+      },
+      "publicadoEn": "2026-11-15T20:00:00Z",
+      "actualizadoEn": "2026-11-16T13:00:00Z",
+      "fuente": "INDECI",
+      "aviso": {
+        "id": "prueba-aviso-003",
+        "textoOriginal": "AVISO DE PRUEBA, NO OFICIAL. Este texto lo escribió el equipo de Teletexto 2.0 para probar la aplicación y no proviene de INDECI. Simula un aviso de inundación de nivel rojo en el departamento de Piura, vigente desde el 16/11/2026 hasta el 20/12/2026. Se recomienda alejarse de los ríos, preparar una mochila de emergencia y seguir las indicaciones de las autoridades.",
+        "urlOriginal": "https://example.com/teletexto/prueba/aviso-003",
+        "referencia": "Aviso de prueba PRUEBA-INDECI-003. Documento ficticio: no existe en INDECI.",
+        "recomendaciones": [
+          {
+            "clave": "alejarse-de-rios",
+            "frases": [
+              "alejarse de los ríos",
+              "aléjese de los ríos",
+              "aléjate de los ríos"
+            ]
+          },
+          {
+            "clave": "mochila-de-emergencia",
+            "frases": [
+              "preparar una mochila de emergencia",
+              "prepare una mochila de emergencia",
+              "mochila de emergencia"
+            ]
+          },
+          {
+            "clave": "seguir-indicaciones",
+            "frases": [
+              "seguir las indicaciones de las autoridades",
+              "siga las indicaciones de las autoridades",
+              "indicaciones de las autoridades"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "prueba-alerta-004",
+      "esDatoDePrueba": true,
+      "titulo": "PRUEBA: vientos fuertes en Puno y Arequipa",
+      "tipoRiesgo": "Vientos fuertes",
+      "nivel": "Bajo",
+      "nivelOficial": {
+        "texto": "Verde",
+        "esMaximo": false
+      },
+      "departamentos": [
+        "21",
+        "04"
+      ],
+      "vigencia": {
+        "inicio": "2026-11-16T05:00:00Z",
+        "fin": "2026-12-16T04:59:59Z"
+      },
+      "publicadoEn": "2026-11-15T18:00:00Z",
+      "actualizadoEn": "2026-11-16T10:00:00Z",
+      "fuente": "SENAMHI",
+      "aviso": {
+        "id": "prueba-aviso-004",
+        "textoOriginal": "AVISO DE PRUEBA, NO OFICIAL. Este texto lo escribió el equipo de Teletexto 2.0 para probar la aplicación y no proviene de SENAMHI. Simula un aviso de vientos fuertes de nivel verde en los departamentos de Puno y Arequipa, vigente desde el 16/11/2026 hasta el 15/12/2026. Se recomienda asegurar los objetos livianos.",
+        "referencia": "Aviso de prueba PRUEBA-SENAMHI-004. Documento ficticio: no existe en SENAMHI.",
+        "recomendaciones": [
+          {
+            "clave": "asegurar-objetos-livianos",
+            "frases": [
+              "asegurar los objetos livianos",
+              "asegure los objetos livianos"
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,230 @@
+{
+  "numero": 200,
+  "titulo": "Precios agrícolas",
+  "tipo": "precios",
+  "esDatoDePrueba": true,
+  "umbralHoras": 24,
+  "metadatos": {
+    "fuente": "MIDAGRI",
+    "publicadoEn": "2026-11-15T15:00:00Z",
+    "actualizadoEn": "2026-11-16T12:00:00Z"
+  },
+  "registros": [
+    {
+      "id": "prueba-precio-001",
+      "esDatoDePrueba": true,
+      "producto": "Papa",
+      "mercado": "Mercado de prueba A",
+      "unidad": "kg",
+      "precioCentimos": 100,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-002",
+      "esDatoDePrueba": true,
+      "producto": "Papa",
+      "mercado": "Mercado de prueba B",
+      "unidad": "kg",
+      "precioCentimos": 125,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-003",
+      "esDatoDePrueba": true,
+      "producto": "Papa",
+      "mercado": "Mercado de prueba C",
+      "unidad": "kg",
+      "precioCentimos": 150,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-004",
+      "esDatoDePrueba": true,
+      "producto": "Cebolla",
+      "mercado": "Mercado de prueba A",
+      "unidad": "kg",
+      "precioCentimos": 175,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-005",
+      "esDatoDePrueba": true,
+      "producto": "Cebolla",
+      "mercado": "Mercado de prueba B",
+      "unidad": "kg",
+      "precioCentimos": null,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-006",
+      "esDatoDePrueba": true,
+      "producto": "Cebolla",
+      "mercado": "Mercado de prueba C",
+      "unidad": "kg",
+      "precioCentimos": 225,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-007",
+      "esDatoDePrueba": true,
+      "producto": "Tomate",
+      "mercado": "Mercado de prueba A",
+      "unidad": "kg",
+      "precioCentimos": 250,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-008",
+      "esDatoDePrueba": true,
+      "producto": "Tomate",
+      "mercado": "Mercado de prueba B",
+      "unidad": "kg",
+      "precioCentimos": 275,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-009",
+      "esDatoDePrueba": true,
+      "producto": "Tomate",
+      "mercado": "Mercado de prueba C",
+      "unidad": "kg",
+      "precioCentimos": 300,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-010",
+      "esDatoDePrueba": true,
+      "producto": "Zanahoria",
+      "mercado": "Mercado de prueba A",
+      "unidad": "kg",
+      "precioCentimos": 325,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-011",
+      "esDatoDePrueba": true,
+      "producto": "Zanahoria",
+      "mercado": "Mercado de prueba B",
+      "unidad": "kg",
+      "precioCentimos": 350,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-012",
+      "esDatoDePrueba": true,
+      "producto": "Zanahoria",
+      "mercado": "Mercado de prueba C",
+      "unidad": "kg",
+      "precioCentimos": 375,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-013",
+      "esDatoDePrueba": true,
+      "producto": "Limón",
+      "mercado": "Mercado de prueba A",
+      "unidad": "kg",
+      "precioCentimos": 400,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-014",
+      "esDatoDePrueba": true,
+      "producto": "Limón",
+      "mercado": "Mercado de prueba B",
+      "unidad": "kg",
+      "precioCentimos": 425,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-015",
+      "esDatoDePrueba": true,
+      "producto": "Limón",
+      "mercado": "Mercado de prueba C",
+      "unidad": "kg",
+      "precioCentimos": 450,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-016",
+      "esDatoDePrueba": true,
+      "producto": "Maíz choclo",
+      "mercado": "Mercado de prueba A",
+      "unidad": "kg",
+      "precioCentimos": 475,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-017",
+      "esDatoDePrueba": true,
+      "producto": "Maíz choclo",
+      "mercado": "Mercado de prueba B",
+      "unidad": "kg",
+      "precioCentimos": 500,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-018",
+      "esDatoDePrueba": true,
+      "producto": "Maíz choclo",
+      "mercado": "Mercado de prueba C",
+      "unidad": "kg",
+      "precioCentimos": 525,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-019",
+      "esDatoDePrueba": true,
+      "producto": "Arroz",
+      "mercado": "Mercado de prueba A",
+      "unidad": "kg",
+      "precioCentimos": 550,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-020",
+      "esDatoDePrueba": true,
+      "producto": "Arroz",
+      "mercado": "Mercado de prueba B",
+      "unidad": "kg",
+      "precioCentimos": null,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-021",
+      "esDatoDePrueba": true,
+      "producto": "Arroz",
+      "mercado": "Mercado de prueba C",
+      "unidad": "kg",
+      "precioCentimos": 600,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-022",
+      "esDatoDePrueba": true,
+      "producto": "Quinua",
+      "mercado": "Mercado de prueba A",
+      "unidad": "kg",
+      "precioCentimos": 625,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-023",
+      "esDatoDePrueba": true,
+      "producto": "Quinua",
+      "mercado": "Mercado de prueba B",
+      "unidad": "kg",
+      "precioCentimos": 650,
+      "fecha": "2026-11-16"
+    },
+    {
+      "id": "prueba-precio-024",
+      "esDatoDePrueba": true,
+      "producto": "Quinua",
+      "mercado": "Mercado de prueba C",
+      "unidad": "kg",
+      "precioCentimos": 675,
+      "fecha": "2026-11-16"
+    }
+  ]
+}

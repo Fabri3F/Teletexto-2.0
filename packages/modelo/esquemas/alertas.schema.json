@@ -1,0 +1,143 @@
+{
+  "$id": "teletexto/alertas.schema.json",
+  "title": "Conjunto de alertas de riesgo (/d/alertas.json)",
+  "description": "Fuente única de las Páginas 101 y 400. Una alerta sin Departamento válido, sin nivel válido, sin fechas de vigencia o sin urlOriginal ni referencia hace que se rechace el archivo completo. No existe ningún nivel por defecto.",
+  "type": "object",
+  "required": ["metadatos", "esDatoDePrueba", "alertas"],
+  "additionalProperties": false,
+  "properties": {
+    "metadatos": { "$ref": "comun.schema.json#/$defs/metadatos" },
+    "esDatoDePrueba": { "$ref": "comun.schema.json#/$defs/esDatoDePrueba" },
+    "alertas": { "type": "array", "items": { "$ref": "#/$defs/alertaRiesgo" } }
+  },
+  "$defs": {
+    "alertaRiesgo": {
+      "type": "object",
+      "required": [
+        "id",
+        "esDatoDePrueba",
+        "titulo",
+        "tipoRiesgo",
+        "nivel",
+        "nivelOficial",
+        "departamentos",
+        "vigencia",
+        "publicadoEn",
+        "actualizadoEn",
+        "fuente",
+        "aviso"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "comun.schema.json#/$defs/id" },
+        "esDatoDePrueba": { "$ref": "comun.schema.json#/$defs/esDatoDePrueba" },
+        "titulo": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "tipoRiesgo": { "type": "string", "minLength": 1 },
+        "nivel": {
+          "description": "Nivel_de_Riesgo normalizado por la capa de mapeo de los conectores, en orden de severidad ascendente.",
+          "enum": ["Bajo", "Moderado", "Alto", "Muy alto"]
+        },
+        "nivelOficial": {
+          "description": "Nivel de la escala original de la fuente. esMaximo indica que es el más alto de esa escala.",
+          "type": "object",
+          "required": ["texto", "esMaximo"],
+          "additionalProperties": false,
+          "properties": {
+            "texto": { "type": "string", "minLength": 1 },
+            "esMaximo": { "type": "boolean" }
+          }
+        },
+        "departamentos": {
+          "description": "Códigos UBIGEO de los Departamentos afectados (supuesto por confirmar junto con la fuente de la geometría): de 1 a 25, sin duplicados.",
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 25,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13",
+              "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25"
+            ]
+          }
+        },
+        "vigencia": {
+          "description": "Inicio y fin de la vigencia en UTC. Que fin no sea anterior a inicio lo comprueba el Parser (Requisito 13.8).",
+          "type": "object",
+          "required": ["inicio", "fin"],
+          "additionalProperties": false,
+          "properties": {
+            "inicio": { "$ref": "comun.schema.json#/$defs/fechaHoraUtc" },
+            "fin": { "$ref": "comun.schema.json#/$defs/fechaHoraUtc" }
+          }
+        },
+        "publicadoEn": { "$ref": "comun.schema.json#/$defs/fechaHoraUtc" },
+        "actualizadoEn": { "$ref": "comun.schema.json#/$defs/fechaHoraUtc" },
+        "fuente": { "enum": ["SENAMHI", "INDECI"] },
+        "aviso": { "$ref": "#/$defs/avisoOficial" }
+      }
+    },
+    "avisoOficial": {
+      "description": "Aviso_Oficial con su referencia verificable: debe tener urlOriginal o referencia (Requisito 4.14).",
+      "type": "object",
+      "required": ["id", "textoOriginal", "recomendaciones"],
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["urlOriginal"], "properties": { "urlOriginal": true } },
+        { "required": ["referencia"], "properties": { "referencia": true } }
+      ],
+      "properties": {
+        "id": { "$ref": "comun.schema.json#/$defs/id" },
+        "textoOriginal": { "type": "string", "minLength": 1 },
+        "urlOriginal": {
+          "description": "Enlace http o https al documento oficial. Se rechazan otros esquemas, como javascript:.",
+          "type": "string",
+          "pattern": "^https?://\\S+$"
+        },
+        "referencia": {
+          "description": "Referencia textual al documento, de máximo 200 caracteres (Requisito 9.4).",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "recomendaciones": { "type": "array", "items": { "$ref": "#/$defs/recomendacion" } },
+        "resumen": { "$ref": "#/$defs/resumenAviso" }
+      }
+    },
+    "recomendacion": {
+      "type": "object",
+      "required": ["clave", "frases"],
+      "additionalProperties": false,
+      "properties": {
+        "clave": { "type": "string", "minLength": 1 },
+        "frases": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "resumenAviso": {
+      "description": "Resumen generado con IA y aprobado por el Verificador. Solo se publican resúmenes aprobados.",
+      "type": "object",
+      "required": ["texto", "hashFuente", "verificacion"],
+      "additionalProperties": false,
+      "properties": {
+        "texto": {
+          "description": "De 1 a 60 palabras. Una palabra es una secuencia de caracteres sin espacios; sin espacios al inicio ni al final.",
+          "type": "string",
+          "pattern": "^\\S+(?:\\s+\\S+){0,59}$"
+        },
+        "hashFuente": {
+          "description": "SHA-256 del textoOriginal normalizado, en hexadecimal minúscula.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "verificacion": {
+          "type": "object",
+          "required": ["estado", "verificadoEn"],
+          "additionalProperties": false,
+          "properties": {
+            "estado": { "const": "aprobado" },
+            "verificadoEn": { "$ref": "comun.schema.json#/$defs/fechaHoraUtc" }
+          }
+        }
+      }
+    }
+  }
+}

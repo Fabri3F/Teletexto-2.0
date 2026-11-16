@@ -1,0 +1,51 @@
+{
+  "version": "1",
+  "confirmadoPorEquipo": false,
+  "nota": "Supuesto inicial por confirmar con las escalas publicadas por SENAMHI e INDECI (design.md, capa de mapeo de niveles). Cada escala va de menor a mayor severidad. Un valor oficial que no esté en la tabla no tiene nivel: la alerta se rechaza y nunca se asigna un nivel por defecto.",
+  "escalas": {
+    "SENAMHI": [
+      {
+        "oficial": "Verde",
+        "nivel": "Bajo",
+        "esMaximo": false
+      },
+      {
+        "oficial": "Amarillo",
+        "nivel": "Moderado",
+        "esMaximo": false
+      },
+      {
+        "oficial": "Naranja",
+        "nivel": "Alto",
+        "esMaximo": false
+      },
+      {
+        "oficial": "Rojo",
+        "nivel": "Muy alto",
+        "esMaximo": true
+      }
+    ],
+    "INDECI": [
+      {
+        "oficial": "Verde",
+        "nivel": "Bajo",
+        "esMaximo": false
+      },
+      {
+        "oficial": "Amarillo",
+        "nivel": "Moderado",
+        "esMaximo": false
+      },
+      {
+        "oficial": "Naranja",
+        "nivel": "Alto",
+        "esMaximo": false
+      },
+      {
+        "oficial": "Rojo",
+        "nivel": "Muy alto",
+        "esMaximo": true
+      }
+    ]
+  }
+}

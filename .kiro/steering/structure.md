@@ -26,6 +26,7 @@ Teletexto-2.0/
 │       ├── meter/                  # datos (Indicador_de_Datos)
 │       └── a11y/                   # contrast
 ├── packages/
+│   ├── modelo/                     # Modelo de datos único: tipos TypeScript y esquemas JSON (page, alertas, comun)
 │   └── verifier/                   # Verificador determinista (extraerCriticos, verificar)
 ├── tools/
 │   ├── ingest/                     # CLI de ingesta: Parser, Pretty_Printer, conectores, mapeo de niveles, orquestador
@@ -42,7 +43,7 @@ Teletexto-2.0/
     └── verificacion.jsonl          # Registro de verificación (auditoría, no se publica)
 ```
 
-Elementos de soporte previstos por el diseño y las tareas: `page.schema.json` (esquema JSON de página), scripts de CI en GitHub Actions (tamaños y gitleaks) y archivos de configuración de TypeScript, Vite, Vitest y fast-check. El diseño no fija su ubicación exacta. Antes de crearlos, se decide con el equipo y se mantiene coherente con esta estructura.
+Los esquemas JSON (`page.schema.json`, `alertas.schema.json`, `comun.schema.json`) y los tipos del modelo viven en `packages/modelo` (decisión de la tarea 1.2). Elementos de soporte previstos por el diseño y las tareas: scripts de CI en GitHub Actions (tamaños y gitleaks) y archivos de configuración de TypeScript, Vite, Vitest y fast-check. El diseño no fija su ubicación exacta. Antes de crearlos, se decide con el equipo y se mantiene coherente con esta estructura.
 
 `dist/`, `dist.tmp/` y `logs/` son artefactos generados y no se versionan salvo decisión del equipo.
 
@@ -70,6 +71,10 @@ Elementos de soporte previstos por el diseño y las tareas: `page.schema.json` (
 | `pages/pricesView` | `filterByProduct`, `paginate` (20) |
 | `a11y/contrast` | `contrastRatio`, usado en pruebas de la paleta |
 | `sw.ts` | Precaché, `sync` de las Páginas 100, 101, 200 y 400 más `/d/alertas.json` y la geometría, estrategia de caché, `getCacheStatus`, `listCachedPages` y mensajes de bytes medidos hacia la página |
+
+### `packages/modelo` (`@teletexto/modelo`)
+
+Única definición de los tipos (`Page`, `EntradaMenu`, `Precio`, `AlertaRiesgo`, `DatasetAlertas`, `AvisoOficial`, `Metadatos`, `Geometria`, `Manifiesto`, `NivelRiesgo`, etc.), de las constantes (niveles, fuentes, códigos de Departamento, límites) y de los esquemas JSON. No depende de ningún otro paquete del proyecto. Se importa desde `@teletexto/modelo` (tipos y constantes) y desde `@teletexto/modelo/esquemas` (esquemas para Ajv). El cliente solo importa tipos y constantes, nunca los esquemas.
 
 ### `tools/ingest` (Servicio_Contenido en build)
 
@@ -99,7 +104,7 @@ Herramienta de una sola vez. Lee la fuente de geometría confirmada por el equip
 3. **`packages/verifier` es independiente**: no importa de `apps/web`, `tools/ingest` ni `workers/admin`. `tools/ingest` lo consume.
 4. **Las vistas de `pages/` no contienen lógica reutilizable**: orden, filtros, paginación, formato y navegación viven en funciones puras de sus módulos y se prueban con propiedades.
 5. **Las vistas no leen la red ni el reloj directamente.** Reciben datos o dependencias inyectadas (`deps`).
-6. **El modelo de datos es único.** Los tipos (`Page`, `Alerta`, `Precio`, `Campana`, `AvisoOficial`, `Metadatos`) y `page.schema.json` se definen una vez y se reutilizan. No se duplican definiciones entre cliente e ingesta.
+6. **El modelo de datos es único.** Los tipos (`Page`, `AlertaRiesgo`, `Precio`, `AvisoOficial`, `Metadatos`, etc.) y los esquemas JSON se definen una sola vez en `packages/modelo` y se reutilizan. No se duplican definiciones entre cliente, ingesta, geometría y verificador. `packages/modelo` no importa de ningún otro paquete.
 7. **Agregar una página nueva es cambio de datos y configuración**, no de código de navegación. El manifiesto es la fuente para saber qué páginas existen.
 8. **Los datos de prueba solo viven en `data/prueba/`** y todo registro lleva `esDatoDePrueba`. Nunca se mezclan con datos reales.
 9. **Una sola fuente de alertas.** Las Páginas 101 y 400 no guardan copias de las alertas. Ambas usan `alertasVigentes` sobre `d/alertas.json`.

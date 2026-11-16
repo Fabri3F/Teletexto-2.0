@@ -1,0 +1,32 @@
+{
+  "numero": 100,
+  "titulo": "Portada",
+  "tipo": "portada",
+  "esDatoDePrueba": true,
+  "umbralHoras": 24,
+  "metadatos": {
+    "fuente": "VARIAS",
+    "publicadoEn": "2026-11-15T14:00:00Z",
+    "actualizadoEn": "2026-11-16T13:00:00Z"
+  },
+  "registros": [
+    {
+      "id": "prueba-menu-101",
+      "esDatoDePrueba": true,
+      "numero": 101,
+      "nombre": "Alertas y emergencias"
+    },
+    {
+      "id": "prueba-menu-200",
+      "esDatoDePrueba": true,
+      "numero": 200,
+      "nombre": "Precios agrícolas"
+    },
+    {
+      "id": "prueba-menu-400",
+      "esDatoDePrueba": true,
+      "numero": 400,
+      "nombre": "Mapa de riesgos climáticos"
+    }
+  ]
+}

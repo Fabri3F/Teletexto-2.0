@@ -1,0 +1,13 @@
+{
+  "numero": 400,
+  "titulo": "Mapa de riesgos climáticos",
+  "tipo": "mapa",
+  "esDatoDePrueba": true,
+  "umbralHoras": 6,
+  "metadatos": {
+    "fuente": "VARIAS",
+    "publicadoEn": "2026-11-15T14:00:00Z",
+    "actualizadoEn": "2026-11-16T13:00:00Z"
+  },
+  "datos": "alertas"
+}
