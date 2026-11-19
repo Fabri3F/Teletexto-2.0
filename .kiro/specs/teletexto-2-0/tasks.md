@@ -94,7 +94,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - _Requirements: 4.1, 4.17, 14.4_
 
 - [ ] 4. Utilidades puras del cliente: formato y navegación (días 2 a 4)
-  - [ ] 4.1 Implementar formato de fechas, reloj, moneda y sanitización
+  - [x] 4.1 Implementar formato de fechas, reloj, moneda y sanitización
     - `formatLima` (DD/MM/AAAA HH:mm, UTC-5, "No disponible"), `formatLimaConSegundos` (DD/MM/AAAA HH:mm:ss), `formatSoles` sobre céntimos y `escapeText`, con `ahora()` inyectable
     - _Requirements: 1.7, 1.8, 3.2, 9.2, 9.3, 15.6_
 
