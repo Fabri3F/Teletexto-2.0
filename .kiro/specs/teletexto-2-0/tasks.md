@@ -82,10 +82,11 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - Pasar la licencia y la atribución al campo correspondiente de `Geometria`
     - _Requirements: 4.1, 4.17, 19.6_
 
-  - [ ] 3.2 Implementar la herramienta `tools/geo`
+  - [x] 3.2 Implementar la herramienta `tools/geo`
     - Leer la fuente confirmada, fusionar o agrupar hasta tener exactamente 25 unidades, simplificar con mapshaper conservando topología, proyectar con una proyección equirrectangular a un `viewBox` fijo y emitir rutas SVG con un decimal y centroides
     - Escribir `public/geo/departamentos.json` con `version`, `fuente`, `licencia`, `viewBox` y los 25 Departamentos
     - Fallar si faltan o sobran códigos respecto de la tabla de 1.4, o si el archivo supera 80 KB comprimidos
+    - Decisiones del Equipo aplicadas: `-explode` y Douglas-Peucker, rutas relativas compactas, parámetros de proyección aprobados y fijados en el código, objetivo de 76 800 bytes y límite de 81 920 bytes (gzip nivel 6), y la excepción documentada del hueco `21#6.2` de Puno (39 de 40 partes). Ver `design.md`, `mapa.config.json` y `fuente.config.json`
     - _Requirements: 4.1, 4.17, 14.4_
 
   - [ ]* 3.3 Escribir pruebas unitarias de `tools/geo`

@@ -1,0 +1,29 @@
+{
+  "descripcion": "Parámetros cartográficos de la geometría del mapa de la Página 400 (tarea 3.2). tools/geo no genera public/geo/departamentos.json mientras aprobadoPorEquipo no sea true, mientras falte algún valor y mientras los valores no coincidan EXACTAMENTE con los que el Equipo aprobó, que además están fijados en tools/geo/constantes.ts (PARAMETROS_APROBADOS).",
+  "aprobadoPorEquipo": true,
+  "aprobacion": {
+    "registradoEn": "2026-11-19",
+    "nota": "El Equipo aprobó estos parámetros para la tarea 3.2 tras comparar los paralelos estándar 0°, -9,2° y -13°. No se registra quién los aprobó ni en qué fecha, porque no se informó; la fecha de registradoEn es la de este registro. Cambiar cualquier valor exige una nueva aprobación del Equipo y actualizar PARAMETROS_APROBADOS en tools/geo/constantes.ts: con el archivo cambiado y el código sin cambiar, tools/geo se niega a generar.",
+    "advertencia": "Con 500 unidades por grado, los dos islotes de Lima (15#0.0 y 15#2.0) quedan como triángulos de unos 22 m de lado, que solo son representables por el redondeo. Con otro paralelo, origen o escala, alguno puede dejar de serlo (con -9,2° se perdía 15#0.0). tools/geo falla si una parte deja de poder dibujarse."
+  },
+  "version": "1",
+  "proyeccion": {
+    "tipo": "equirrectangular",
+    "paraleloEstandarGrados": -13,
+    "unidadesPorGrado": 500,
+    "longitudOrigenGrados": -81.379,
+    "latitudOrigenGrados": 0.012
+  },
+  "viewBox": [0, 0, 6225, 9207],
+  "derivacion": {
+    "extensionDeLaFuente": "Longitud de -81.32823 a -68.65228 y latitud de -0.03861 a -18.35093 (fuente.config.json, verificacion.extensionLongitudLatitud).",
+    "margen": "0.05 grados por lado (unos 5.5 km). Los bordes se redondean hacia afuera a 3 decimales: longitud de -81.379 a -68.602 y latitud de 0.012 a -18.401, que dan 12.777 y 18.413 grados.",
+    "viewBox": "Alto = techo(18.413 × 500) = 9207. Ancho = techo(12.777 × cos(13°) × 500) = 6225. minX y minY son 0."
+  },
+  "ayuda": {
+    "proyeccion": "x = (longitud - longitudOrigenGrados) * cos(paraleloEstandarGrados) * unidadesPorGrado. y = (latitudOrigenGrados - latitud) * unidadesPorGrado. Las latitudes del sur dan y positiva y el norte queda arriba, como en un SVG.",
+    "viewBox": "[minX, minY, ancho, alto] en las mismas unidades. tools/geo falla si algún punto proyectado queda fuera del viewBox.",
+    "decimales": "Las coordenadas de las rutas llevan un decimal (tasks.md 3.2). La escala decide qué partes pequeñas se pueden representar con esa precisión: a menor escala, más partes diminutas colapsan.",
+    "simplificacion": "No es un parámetro: tools/geo usa Mapshaper con -explode y Douglas-Peucker, y busca el mayor porcentaje de vértices con el que el archivo comprimido (gzip nivel 6) queda en 76 800 bytes o menos (objetivo operativo). Arranca en 8,3 %. Falla si supera 81 920 bytes (límite absoluto)."
+  }
+}

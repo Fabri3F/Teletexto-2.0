@@ -139,7 +139,11 @@ export interface DatasetAlertas {
 export interface DepartamentoGeometria {
   codigo: CodigoDepartamento;
   nombre: string;
-  /** Ruta SVG (atributo `d`) ya proyectada al `viewBox`. */
+  /**
+   * Ruta SVG (atributo `d`) ya proyectada al `viewBox`. Es relativa y compacta: una subruta `m dx dy dx dy … z` por parte
+   * (isla, polígono o hueco). Se pinta tal cual en un `<path d>`: los huecos van como subrutas de sentido contrario al de los
+   * exteriores, así que se ven con el relleno por defecto.
+   */
   d: string;
   centroide: [number, number];
 }

@@ -87,7 +87,7 @@ Los esquemas JSON (`page.schema.json`, `alertas.schema.json`, `comun.schema.json
 
 ### `tools/geo`
 
-Herramienta de una sola vez. Lee la fuente de geometría confirmada por el equipo, deja exactamente 25 unidades, simplifica con mapshaper hasta menos de 80 KB comprimidos y emite `public/geo/departamentos.json`. No corre mientras `confirmadoPorEquipo` sea `false`. No es parte del build normal.
+Herramienta de una sola vez. Lee la fuente de geometría confirmada por el equipo, deja exactamente 25 unidades, simplifica con mapshaper (`-explode` y Douglas-Peucker) hasta 76 800 bytes comprimidos como objetivo operativo, sin pasar nunca de 81 920 bytes (80 KB), y emite `public/geo/departamentos.json` con rutas relativas. Solo corre con los parámetros aprobados de `mapa.config.json` (fijados en `constantes.ts`). No corre mientras `confirmadoPorEquipo` sea `false`. No es parte del build normal.
 
 ### `packages/verifier`
 

@@ -9,6 +9,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "@teletexto/modelo": "*"
+    "@teletexto/modelo": "*",
+    "mapshaper": "^0.8.5"
   }
 }

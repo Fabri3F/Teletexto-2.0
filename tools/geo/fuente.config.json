@@ -150,7 +150,7 @@
       "anillosCerrados": true,
       "verticesFinitos": true,
       "huecosFueraDeUnExterior": 0,
-      "nota": "Una entidad puede tener varias partes (islas, varios polígonos o huecos). Las partes por departamento están en esperadoPorDepartamento y tools/geo (tarea 3.2) debe conservarlas todas."
+      "nota": "Una entidad puede tener varias partes (islas, varios polígonos o huecos). Las partes por departamento están en esperadoPorDepartamento y tools/geo (tarea 3.2) debe conservarlas todas, salvo la parte autorizada que se registra en partesNoRepresentables."
     },
     "esperadoPorDepartamento": [
       {
@@ -355,6 +355,34 @@
       }
     ]
   },
+  "partesNoRepresentables": [
+    {
+      "id": "21#6.2",
+      "codigo": "21",
+      "nombreEnDbf": "PUNO",
+      "poligono": 6,
+      "anillo": 2,
+      "tipo": "hueco",
+      "puntos": 4,
+      "puntosDistintos": 3,
+      "sha256": "bd73b61b164180fcb36dd008ea4e42b6f0929bd73b732a889611b8d993b01522",
+      "algoritmoDeLaHuella": "SHA-256 (hexadecimal) del texto UTF-8 de JSON.stringify(anillo), con cada punto como [longitud, latitud] en grados tal como los entrega Mapshaper al leer el ZIP sin simplificar. Los índices poligono y anillo (desde 0) son los de esa lectura.",
+      "medidas": {
+        "anchoMetros": 18.9,
+        "altoMetros": 23.9,
+        "areaMetrosCuadrados": 0.04,
+        "areaGradosCuadrados": -3.183231456205249e-12,
+        "distanciaEntreDosVerticesMetros": 0.0037
+      },
+      "motivo": "Es un hueco de Puno de 4 puntos, 3 de ellos distintos, de unos 19 por 24 metros. Dos de sus vértices están a unos 3,7 milímetros y su área es de unos 0,04 m², así que es un triángulo degenerado: con un decimal solo se distinguirían esos dos vértices con una escala del orden de millones de unidades por grado. No se puede dibujar con un decimal a ninguna escala razonable, y con las escalas probadas (250 a 8000 unidades por grado) siempre se reduce a menos de 3 puntos distintos. Probablemente es un artefacto de digitalización de la fuente, aunque eso no se verificó. Su área es de unos 10^-17 del área de Puno, así que no cambia el dibujo, el área ni el centroide.",
+      "condiciones": "La excepción vale solo para este anillo: tools/geo comprueba que la fuente sin simplificar tiene un anillo con esta misma huella y número de puntos, y que con los parámetros aprobados sigue sin poder dibujarse. Cualquier otra parte que no se pueda dibujar es un error. Un cambio en la fuente o en los parámetros que haga la excepción innecesaria o inválida hace fallar la herramienta.",
+      "aprobadoPorEquipo": true,
+      "aprobacion": {
+        "registradoEn": "2026-11-19",
+        "nota": "El Equipo aprobó esta excepción para la tarea 3.2 y la autorizó como la única. No se registra quién la aprobó ni en qué fecha, porque no se informó; la fecha de registradoEn es la de este registro. La fuente del IGN no se modifica: el anillo sigue en el ZIP y solo se omite al dibujar el mapa."
+      }
+    }
+  ],
   "advertencias": [
     "Los límites son referenciales (escala 1:100 000 según la descripción del portal). No son límites legales definitivos y no deben presentarse como tales.",
     "El IGN es el publicador del conjunto. INEI figura como fuente en los atributos del DBF. No se afirma que la geometría sea oficial para fines legales.",
