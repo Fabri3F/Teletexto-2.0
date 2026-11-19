@@ -1,0 +1,364 @@
+{
+  "version": 1,
+  "descripcion": "Fuente de la geometría del mapa de la Página 400 (tarea 3.1). La lee tools/geo, que no se ejecuta si confirmadoPorEquipo no es true. Los datos de verificación se calcularon leyendo directamente el ZIP; no se generó ni se simplificó ninguna geometría.",
+  "confirmadoPorEquipo": true,
+  "confirmacion": {
+    "registradoEn": "2026-11-18",
+    "nota": "El Equipo aprobó esta fuente con los datos de este archivo. No se registra quién la aprobó ni en qué fecha, porque no se informó."
+  },
+  "fuente": {
+    "publicador": "Instituto Geográfico Nacional (IGN), Perú",
+    "conjunto": "Límites Departamentales",
+    "identificador": "6c5c52fd-047d-4ba7-9ac7-3865860118c2",
+    "portal": "Plataforma Nacional de Datos Abiertos (datosabiertos.gob.pe)",
+    "urlConjunto": "https://www.datosabiertos.gob.pe/dataset/limites-departamentales",
+    "urlRecurso": "https://www.datosabiertos.gob.pe/sites/default/files/DEPARTAMENTOS_LIMITES.zip",
+    "descripcionDelPortal": "En este dataset se encontrarán los límites referenciales del Perú a la escala 1: 100 000",
+    "naturalezaDeLosLimites": "referencial",
+    "fuenteEnAtributos": {
+      "campo": "FUENTE",
+      "valor": "INEI",
+      "registros": 25,
+      "nota": "El publicador del conjunto es el IGN. El archivo DBF indica INEI como fuente en sus 25 registros. Ambas entidades se registran tal como figuran, sin afirmar quién es el autor original de cada dato. Los metadatos del shapefile indican que el campo FUENTE se rellenó con un cálculo de campo de valor constante, así que no prueba el origen de cada registro por separado."
+    }
+  },
+  "licencia": {
+    "id": "ODC-By",
+    "nombre": "Open Data Commons Attribution License (ODC-By)",
+    "version": "1.0",
+    "notaVersion": "El portal no indica la versión. El enlace de la Open Definition y el texto publicado por Open Data Commons corresponden a la versión 1.0.",
+    "declaradaEnPortal": "http://opendefinition.org/licenses/odc-by/",
+    "urlTexto": "https://opendatacommons.org/licenses/by/1.0/",
+    "urlResumen": "https://opendatacommons.org/licenses/by/summary/",
+    "condiciones": "Las condiciones de uso están en la sección 4 del texto completo: 4.2 (avisos al distribuir la base de datos o una derivada) y 4.3 (aviso al usar públicamente una obra producida). Esta configuración no resume ni amplía esas condiciones: rige el texto de la licencia.",
+    "avisoSugeridoPorLaLicencia": "Contains information from DATABASE NAME which is made available under the ODC Attribution License."
+  },
+  "atribucion": {
+    "texto": "Contiene información de «Límites Departamentales» del Instituto Geográfico Nacional (IGN) del Perú, disponible bajo la licencia ODC-By. Fuente indicada en los datos: INEI. Los límites son referenciales y no deben tomarse como límites legales definitivos.",
+    "nota": "Es el texto que la Página 400 debe mostrar cerca del mapa (tarea 12.x). Es una versión en español del aviso que sugiere la sección 4.3 de la licencia; el Equipo debe confirmar que cumple lo que exige su texto original."
+  },
+  "sistemaCoordenadas": {
+    "nombre": "GCS_WGS_1984",
+    "tipo": "geográfico (longitud y latitud en grados), sin proyección",
+    "datum": "D_WGS_1984",
+    "elipsoide": "WGS_1984 (semieje mayor 6378137.0; inverso del aplanamiento 298.257223563)",
+    "meridianoOrigen": "Greenwich",
+    "unidad": "grado",
+    "prjLiteral": "GEOGCS[\"GCS_WGS_1984\",DATUM[\"D_WGS_1984\",SPHEROID[\"WGS_1984\",6378137.0,298.257223563]],PRIMEM[\"Greenwich\",0.0],UNIT[\"Degree\",0.0174532925199433]]",
+    "nota": "tools/geo (tarea 3.2) debe proyectar estas coordenadas al viewBox del mapa; este archivo no las modifica."
+  },
+  "codificacion": {
+    "esquema": "UBIGEO",
+    "campoCodigo": "CODDEP",
+    "campoNombre": "DEPARTAMEN",
+    "largoCodigo": 2,
+    "unidades": 25,
+    "primerCodigo": "01",
+    "ultimoCodigo": "25",
+    "callao": "07",
+    "nota": "Verificado en el DBF: 25 códigos únicos de 01 a 25, el Callao es 07 y los códigos y nombres coinciden con la tabla de la tarea 1.4 (el DBF escribe los nombres en mayúsculas y sin tildes). Cada departamento es un único registro, incluidos Lima y el Callao."
+  },
+  "archivoLocal": {
+    "ruta": "data/fuentes/ign/DEPARTAMENTOS_LIMITES.zip",
+    "bytes": 4039979,
+    "sha256": "BCB056F4DF23064F4AC8CD6ADF99161C5715609A9B495D96D1FDD8E303CE58DF",
+    "identicoAlDelPortal": true,
+    "verificadoContraElPortalEl": "2026-11-18",
+    "contenido": [
+      {
+        "nombre": "DEPARTAMENTOS.CPG",
+        "bytes": 5
+      },
+      {
+        "nombre": "DEPARTAMENTOS.dbf",
+        "bytes": 4269
+      },
+      {
+        "nombre": "DEPARTAMENTOS.prj",
+        "bytes": 145
+      },
+      {
+        "nombre": "DEPARTAMENTOS.sbn",
+        "bytes": 404
+      },
+      {
+        "nombre": "DEPARTAMENTOS.sbx",
+        "bytes": 148
+      },
+      {
+        "nombre": "DEPARTAMENTOS.shp",
+        "bytes": 5352424
+      },
+      {
+        "nombre": "DEPARTAMENTOS.shp.xml",
+        "bytes": 758
+      },
+      {
+        "nombre": "DEPARTAMENTOS.shx",
+        "bytes": 300
+      }
+    ]
+  },
+  "verificacion": {
+    "fecha": "2026-11-18",
+    "metodo": "Lectura directa de los archivos del ZIP con un script de inspección temporal, que ya no existe. No se usó Mapshaper ni ninguna herramienta que genere o simplifique geometrías.",
+    "formato": "ESRI Shapefile",
+    "tipoDeForma": "Polygon",
+    "codificacionDbf": "UTF-8 (según DEPARTAMENTOS.CPG)",
+    "campos": [
+      {
+        "nombre": "OBJECTID",
+        "tipo": "N",
+        "largo": 10
+      },
+      {
+        "nombre": "CODDEP",
+        "tipo": "C",
+        "largo": 2
+      },
+      {
+        "nombre": "DEPARTAMEN",
+        "tipo": "C",
+        "largo": 50
+      },
+      {
+        "nombre": "CAPITAL",
+        "tipo": "C",
+        "largo": 50
+      },
+      {
+        "nombre": "FUENTE",
+        "tipo": "C",
+        "largo": 50
+      }
+    ],
+    "entidades": 25,
+    "partesTotales": 40,
+    "verticesTotales": 334429,
+    "extensionLongitudLatitud": {
+      "xmin": -81.32823,
+      "ymin": -18.35093,
+      "xmax": -68.65228,
+      "ymax": -0.03861
+    },
+    "metadatosEsri": {
+      "fechaDeCreacion": "2024-03-14",
+      "capaDeOrigenSegunElLinaje": "PERU_DEPARTAMENTOS_2022",
+      "nota": "Datos copiados del archivo DEPARTAMENTOS.shp.xml sin interpretarlos. El portal publica el recurso con fecha de modificación 24/06/2025."
+    },
+    "integridadDeGeometrias": {
+      "anillosCerrados": true,
+      "verticesFinitos": true,
+      "huecosFueraDeUnExterior": 0,
+      "nota": "Una entidad puede tener varias partes (islas, varios polígonos o huecos). Las partes por departamento están en esperadoPorDepartamento y tools/geo (tarea 3.2) debe conservarlas todas."
+    },
+    "esperadoPorDepartamento": [
+      {
+        "codigo": "01",
+        "nombreEnDbf": "AMAZONAS",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 7647
+      },
+      {
+        "codigo": "02",
+        "nombreEnDbf": "ANCASH",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 16066
+      },
+      {
+        "codigo": "03",
+        "nombreEnDbf": "APURIMAC",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 7245
+      },
+      {
+        "codigo": "04",
+        "nombreEnDbf": "AREQUIPA",
+        "partes": 2,
+        "anillosExteriores": 1,
+        "huecos": 1,
+        "vertices": 16442
+      },
+      {
+        "codigo": "05",
+        "nombreEnDbf": "AYACUCHO",
+        "partes": 2,
+        "anillosExteriores": 1,
+        "huecos": 1,
+        "vertices": 14259
+      },
+      {
+        "codigo": "06",
+        "nombreEnDbf": "CAJAMARCA",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 13187
+      },
+      {
+        "codigo": "07",
+        "nombreEnDbf": "CALLAO",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 4267
+      },
+      {
+        "codigo": "08",
+        "nombreEnDbf": "CUSCO",
+        "partes": 2,
+        "anillosExteriores": 1,
+        "huecos": 1,
+        "vertices": 17806
+      },
+      {
+        "codigo": "09",
+        "nombreEnDbf": "HUANCAVELICA",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 9524
+      },
+      {
+        "codigo": "10",
+        "nombreEnDbf": "HUANUCO",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 15106
+      },
+      {
+        "codigo": "11",
+        "nombreEnDbf": "ICA",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 14367
+      },
+      {
+        "codigo": "12",
+        "nombreEnDbf": "JUNIN",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 12811
+      },
+      {
+        "codigo": "13",
+        "nombreEnDbf": "LA LIBERTAD",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 12687
+      },
+      {
+        "codigo": "14",
+        "nombreEnDbf": "LAMBAYEQUE",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 4579
+      },
+      {
+        "codigo": "15",
+        "nombreEnDbf": "LIMA",
+        "partes": 4,
+        "anillosExteriores": 4,
+        "huecos": 0,
+        "vertices": 25702
+      },
+      {
+        "codigo": "16",
+        "nombreEnDbf": "LORETO",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 27576
+      },
+      {
+        "codigo": "17",
+        "nombreEnDbf": "MADRE DE DIOS",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 7852
+      },
+      {
+        "codigo": "18",
+        "nombreEnDbf": "MOQUEGUA",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 6625
+      },
+      {
+        "codigo": "19",
+        "nombreEnDbf": "PASCO",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 10868
+      },
+      {
+        "codigo": "20",
+        "nombreEnDbf": "PIURA",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 12399
+      },
+      {
+        "codigo": "21",
+        "nombreEnDbf": "PUNO",
+        "partes": 10,
+        "anillosExteriores": 7,
+        "huecos": 3,
+        "vertices": 29519
+      },
+      {
+        "codigo": "22",
+        "nombreEnDbf": "SAN MARTIN",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 12475
+      },
+      {
+        "codigo": "23",
+        "nombreEnDbf": "TACNA",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 5169
+      },
+      {
+        "codigo": "24",
+        "nombreEnDbf": "TUMBES",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 4323
+      },
+      {
+        "codigo": "25",
+        "nombreEnDbf": "UCAYALI",
+        "partes": 1,
+        "anillosExteriores": 1,
+        "huecos": 0,
+        "vertices": 25928
+      }
+    ]
+  },
+  "advertencias": [
+    "Los límites son referenciales (escala 1:100 000 según la descripción del portal). No son límites legales definitivos y no deben presentarse como tales.",
+    "El IGN es el publicador del conjunto. INEI figura como fuente en los atributos del DBF. No se afirma que la geometría sea oficial para fines legales.",
+    "El portal no indica la fecha de vigencia de los límites. Solo constan la fecha de creación de los metadatos del shapefile y la fecha de modificación del recurso en el portal.",
+    "Los nombres del DBF están en mayúsculas y sin tildes. Los nombres que se muestran al usuario salen de la tabla de la tarea 1.4."
+  ]
+}

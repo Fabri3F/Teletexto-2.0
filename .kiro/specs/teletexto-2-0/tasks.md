@@ -76,7 +76,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - _Requirements: 2.8, 4.13, 9.6, 9.7, 13.2, 13.7, 14.3, 14.4, 17.2_
 
 - [ ] 3. Geometría del mapa: herramienta `tools/geo` (días 1 a 4)
-  - [ ] 3.1 Crear la configuración de la fuente y la puerta de confirmación con el Equipo
+  - [x] 3.1 Crear la configuración de la fuente y la puerta de confirmación con el Equipo
     - Crear `tools/geo/fuente.config.json` con fuente candidata (INEI o IGN), licencia, atribución, codificación UBIGEO y el campo `confirmadoPorEquipo: false`
     - Hacer que `tools/geo` se niegue a ejecutarse mientras `confirmadoPorEquipo` no sea `true`, y que imprima la fuente, la licencia y la codificación pendientes de confirmar
     - Pasar la licencia y la atribución al campo correspondiente de `Geometria`
