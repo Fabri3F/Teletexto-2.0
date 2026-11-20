@@ -114,7 +114,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - **Property 20: Sanitización de contenido externo**
     - **Validates: Requirements 15.6**
 
-  - [ ] 4.6 Implementar router, búfer de dígitos e historial
+  - [x] 4.6 Implementar router, búfer de dígitos e historial
     - `pageToUrl`, `urlToPage`, `isValidPageNumber`, resolución contra el manifiesto, `entryBuffer` (push, cancel, tick con 5 s, display con marcadores) e `history` (visit, back)
     - _Requirements: 5.4, 5.6, 5.7, 5.8, 5.9, 5.10, 5.11, 5.12, 5.13, 6.7, 6.8, 17.2_
 
