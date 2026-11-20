@@ -135,7 +135,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - **Validates: Requirements 5.7, 5.8**
 
 - [ ] 5. Lógica pura del cliente: alertas, sincronización, indicador y mapa (días 3 a 9)
-  - [ ] 5.1 Implementar `risk/alertas`
+  - [x] 5.1 Implementar `risk/alertas`
     - `esVigente`, `alertasVigentes`, `riesgoPorDepartamento` (25 entradas, nivel máximo o `null`, sin nivel por defecto), `detalleDepartamento`, `sortAlerts` y `mergeSources`, con `ahora()` inyectable
     - Incluir cada alerta en todos los Departamentos que cubre y ordenar el detalle por nivel y por fecha de actualización
     - _Requirements: 2.2, 2.7, 2.8, 4.2, 4.5, 4.6, 4.9, 4.13, 4.16, 4.20_
