@@ -1,0 +1,83 @@
+/*
+ * Pantalla_de_Carga (tarea 7.3). Requisitos 1.9 a 1.12 y 14.2.
+ *
+ * El marcado está en index.html, fuera de #app, y esta hoja bloquea el render para que sea lo primero que se ve. No depende de
+ * JavaScript: una animación CSS la oculta a los 1.5 s. Si el contenido de la Portada llega antes, la aplicación añade la clase
+ * `listo` a este mismo elemento (tarea 7.5) y se oculta de inmediato. Sin scripts, estilos en línea, imágenes ni fuentes web.
+ * Los colores son los de la paleta del teletexto (a11y/paleta.ts).
+ */
+#pantalla-de-carga {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: #000000;
+  color: #ffffff;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, 'Courier New', monospace;
+  /* Se desvanece entre 1.2 s y 1.5 s y queda oculta a los 1.5 s. */
+  animation: ocultar-pantalla-de-carga 0.3s linear 1.2s forwards;
+}
+
+.splash-logo {
+  width: 4rem;
+  height: 3rem;
+}
+
+.splash-marco {
+  fill: none;
+  stroke: #ffff00;
+  stroke-width: 2;
+}
+
+.splash-t {
+  fill: #ffffff;
+}
+
+.splash-barra {
+  fill: none;
+  stroke: #00ffff;
+  stroke-width: 3;
+}
+
+.splash-nombre {
+  margin: 0;
+  color: #ffff00;
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+}
+
+/* La aplicación añade `listo` cuando la Portada tiene contenido. Oculta de inmediato, sea cual sea el estado de la animación. */
+#pantalla-de-carga.listo {
+  animation: none;
+  opacity: 0;
+  visibility: hidden;
+}
+
+@keyframes ocultar-pantalla-de-carga {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Movimiento reducido: sin desvanecimiento ni ningún movimiento. Solo el cambio de visibilidad a los 1.5 s. */
+@media (prefers-reduced-motion: reduce) {
+  #pantalla-de-carga {
+    animation: ocultar-pantalla-de-carga-sin-movimiento 0s step-end 1.5s forwards;
+  }
+
+  @keyframes ocultar-pantalla-de-carga-sin-movimiento {
+    to {
+      visibility: hidden;
+    }
+  }
+}

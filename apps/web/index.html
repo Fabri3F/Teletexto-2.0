@@ -5,8 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <title>Teletexto 2.0</title>
+    <link rel="stylesheet" href="/splash.css" />
   </head>
   <body>
+    <div id="pantalla-de-carga" aria-hidden="true">
+      <svg class="splash-logo" viewBox="0 0 64 48" width="64" height="48" aria-hidden="true" focusable="false">
+        <rect class="splash-marco" x="1" y="1" width="62" height="46" />
+        <path class="splash-t" d="M10 8h44v8H36v24h-8V16H10z" />
+        <path class="splash-barra" d="M10 42h44" />
+      </svg>
+      <p class="splash-nombre">Teletexto 2.0</p>
+    </div>
     <div id="app"></div>
     <script type="module" src="/main.tsx"></script>
   </body>

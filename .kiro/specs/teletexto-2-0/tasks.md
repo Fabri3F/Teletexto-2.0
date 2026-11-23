@@ -213,7 +213,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - **Property 10: Política de reintentos de red**
     - **Validates: Requirements 14.7, 14.8, 14.9, 5.5**
 
-  - [ ] 7.3 Implementar la Pantalla_de_Carga
+  - [x] 7.3 Implementar la Pantalla_de_Carga
     - Marcado con "Teletexto 2.0" y logotipo SVG en `index.html` y `splash.css`, sin scripts, estilos en línea, imágenes rasterizadas ni librerías, con peso de 5 KB comprimidos o menos
     - Ocultarla con una animación CSS a los 1.5 s y con la clase `listo` cuando la Portada tenga contenido, sin animaciones con `prefers-reduced-motion`
     - _Requirements: 1.9, 1.10, 1.11, 1.12, 14.2_
