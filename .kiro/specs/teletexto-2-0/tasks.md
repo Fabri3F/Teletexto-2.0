@@ -164,7 +164,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - **Property 32: Detalle y orden de alertas del departamento**
     - **Validates: Requirements 4.7, 4.8, 4.9, 4.20, 9.5**
 
-  - [ ] 5.8 Implementar el reducer de estado de sincronización y la frescura
+  - [x] 5.8 Implementar el reducer de estado de sincronización y la frescura
     - `sync/estadoSync` (`reducir` con eventos `abrir`, `contenidoListo`, `syncInicia`, `syncOk`, `syncFalla`, `offline`, `online`) y `sync/frescura` (`estadoFrescura`: nunca, vigente, desactualizada)
     - _Requirements: 1.13, 1.14, 1.15, 1.16, 1.17, 1.18, 7.9, 7.10, 7.11, 7.12_
 
