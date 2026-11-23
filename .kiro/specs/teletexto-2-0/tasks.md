@@ -176,7 +176,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - **Property 36: Estado de sincronización**
     - **Validates: Requirements 1.13, 1.14, 1.15, 1.16, 1.17, 1.18**
 
-  - [ ] 5.11 Implementar el módulo puro `meter/datos`
+  - [x] 5.11 Implementar el módulo puro `meter/datos`
     - `acumular` (suma solo bytes medidos, ignora cero, negativos y no finitos), `formatMB` con aritmética entera y `textoIndicador` según las capacidades medibles
     - Mantener el contador solo en memoria, sin solicitudes de red propias
     - _Requirements: 8.2, 8.3, 8.4, 8.5, 8.6, 8.7, 8.8, 8.9, 8.11, 8.12, 8.15_
