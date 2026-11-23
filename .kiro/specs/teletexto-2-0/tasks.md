@@ -197,7 +197,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - **Property 33: Recorrido del mapa por teclado**
     - **Validates: Requirements 4.10, 6.2, 6.6**
 
-  - [ ] 5.16 Implementar `a11y/contrast` y la paleta
+  - [x] 5.16 Implementar `a11y/contrast` y la paleta
     - `contrastRatio`, paleta del estilo teletexto (texto 7:1), colores y patrones de los cuatro niveles y del Estilo_Neutro, con pruebas unitarias de contraste de 3:1 entre colores, patrones y bordes
     - _Requirements: 4.4, 6.5, 18.1, 18.3, 18.10_
 
