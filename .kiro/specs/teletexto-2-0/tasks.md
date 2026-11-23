@@ -189,7 +189,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - **Property 38: Texto del indicador según lo medible**
     - **Validates: Requirements 8.1, 8.4, 8.5, 8.6, 8.7, 8.9**
 
-  - [ ] 5.14 Implementar `risk/mapNav`
+  - [x] 5.14 Implementar `risk/mapNav`
     - `ordenRecorrido` y `mover` (Departamento más cercano por centroides, con avance de respaldo para alcanzar los 25)
     - _Requirements: 4.10, 6.2, 6.6_
 
