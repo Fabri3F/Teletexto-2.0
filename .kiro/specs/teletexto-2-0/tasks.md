@@ -364,7 +364,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
     - **Validates: Requirements 3.1, 3.3, 3.4, 3.5**
 
 - [ ] 14. Seguridad y límites de tamaño en CI (días 12 a 14)
-  - [ ] 14.1 Configurar cabeceras y despliegue en Cloudflare Pages
+  - [x] 14.1 Configurar cabeceras y despliegue en Cloudflare Pages
     - Crear `public/_headers` con CSP sin scripts ni estilos en línea, X-Content-Type-Options, X-Frame-Options y HSTS, la redirección HTTPS y el límite de 60 solicitudes por 60 s con 429 y `Retry-After`
     - _Requirements: 15.1, 15.2, 15.7, 15.8, 15.9, 16.2_
 
