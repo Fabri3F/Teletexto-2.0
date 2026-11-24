@@ -2,10 +2,13 @@
   "name": "@teletexto/admin",
   "version": "0.0.0",
   "private": true,
-  "description": "Worker de Cloudflare /admin/reload: único punto de escritura. Se implementa en la tarea 14.2.",
+  "description": "Worker de Cloudflare /admin/reload: único punto de escritura. Valida un JWT ES256 de administrador y dispara el workflow de ingesta.",
   "type": "module",
   "main": "index.ts",
   "scripts": {
     "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "jose": "^6.2.18"
   }
 }
