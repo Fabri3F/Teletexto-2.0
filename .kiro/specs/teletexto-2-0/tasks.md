@@ -286,7 +286,7 @@ Todo el código usa TypeScript: Preact y Vite en el cliente, CLI Node en la inge
   - Ensure all tests pass, ask the user if questions arise.
 
 - [ ] 10. Resúmenes con IA y Verificador (días 7 a 9)
-  - [ ] 10.1 Implementar el Verificador determinista
+  - [x] 10.1 Implementar el Verificador determinista
     - `extraerCriticos` (cifras, fechas, horas, lugares, niveles), reglas de añadido, modificación y omisión de recomendaciones, límite de 5 s y rechazo ante la duda
     - Registro `{estado, motivo (máx. 500), verificadoEn}` en UTC con precisión de segundos
     - _Requirements: 11.3, 12.1, 12.2, 12.3, 12.4, 12.8, 12.9_
